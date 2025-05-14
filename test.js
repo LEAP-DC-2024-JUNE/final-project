@@ -7,3 +7,4 @@ console.log("Suvd Hehe");
 // Batkhuleg
 //Suvdaa
 //Alungoo
+//Munkhuush
