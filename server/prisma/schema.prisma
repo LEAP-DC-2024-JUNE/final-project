@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String     @id @default(uuid())
+  clerkId     String     @unique
+  email       String     @unique
+  phoneNumber String?    // optional
+  role        Role       @default(STUDENT)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  courses      Course[]       @relation("InstructorCourses")
+  enrollments  Enrollment[]
+  payments     Payment[]
+}
+
+model Course {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  price       Float
+  imageUrl    String?    // ✅ new: optional course image
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  instructor   User      @relation("InstructorCourses", fields: [instructorId], references: [id])
+  instructorId String
+
+  enrollments  Enrollment[]
+  sections     Section[]
+  payments     Payment[]
+}
+
+model Section {
+  id        String   @id @default(uuid())
+  name      String
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  String
+  videos    Video[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Video {
+  id         String   @id @default(uuid())
+  title      String
+  url        String
+  section    Section  @relation(fields: [sectionId], references: [id])
+  sectionId  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Enrollment {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  course     Course   @relation(fields: [courseId], references: [id])
+  userId     String
+  courseId   String
+  enrolledAt DateTime @default(now())
+}
+
+model Payment {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  course     Course   @relation(fields: [courseId], references: [id])
+  userId     String
+  courseId   String
+  amount     Int
+  stripeId   String
+  createdAt  DateTime @default(now())
+}
+
+enum Role {
+  STUDENT
+  INSTRUCTOR
+  ADMIN
+}
