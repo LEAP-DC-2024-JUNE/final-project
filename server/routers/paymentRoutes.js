@@ -4,11 +4,11 @@ import {
   getAllPayments,
   getPaymentsByCourse,
   getPaymentsByUser,
-} from "../controllers/paymentController";
+} from "../controllers/paymentController.js";
 import {
   authenticateUser,
   authorizeRoles,
-} from "../middlewares/authMiddleware";
+} from "../middlewares/authMiddleware.js";
 
 const paymentRouter = express.Router();
 

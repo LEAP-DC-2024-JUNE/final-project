@@ -1,4 +1,4 @@
-import prisma from "../lib/prisma";
+import prisma from "../lib/prisma.js";
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -41,5 +41,66 @@ export const deleteUser = async (req, res) => {
     res.status(200).json({ message: "Deleted successfully" });
   } catch (error) {
     res.status(400).json({ error: "Failed to delete user" });
+  }
+};
+
+// export const syncUser = async (req, res) => {
+//   const clerkId = req.clerkId; // now set by middleware
+//   const { email, role } = req.body;
+
+//   if (!clerkId || !email || !role) {
+//     return res.status(400).json({ success: false, error: "Missing data" });
+//   }
+
+//   try {
+//     let user = await prisma.user.findUnique({ where: { clerkId } });
+
+//     if (!user) {
+//       user = await prisma.user.create({
+//         data: {
+//           clerkId,
+//           email,
+//           role: role === "INSTRUCTOR" ? "INSTRUCTOR" : "STUDENT",
+//         },
+//       });
+//     }
+
+//     return res.status(200).json({ success: true, user });
+//   } catch (error) {
+//     return res.status(500).json({ success: false, error: error.message });
+//   }
+// };
+
+export const syncUser = async (req, res) => {
+  const clerkId = req.clerkId;
+  const { email, role } = req.body;
+
+  console.log("SYNC REQUEST:");
+  console.log("Clerk ID:", clerkId);
+  console.log("Email:", email);
+  console.log("Role:", role);
+
+  if (!clerkId || !email || !role) {
+    console.log("Missing data");
+    return res.status(400).json({ success: false, error: "Missing data" });
+  }
+
+  try {
+    let user = await prisma.user.findUnique({ where: { clerkId } });
+
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          clerkId,
+          email,
+          role: role === "INSTRUCTOR" ? "INSTRUCTOR" : "STUDENT",
+        },
+      });
+    }
+
+    return res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.error("Error syncing user:", error);
+    return res.status(500).json({ success: false, error: error.message });
   }
 };

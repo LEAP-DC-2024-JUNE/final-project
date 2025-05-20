@@ -3,15 +3,15 @@ import {
   deleteSection,
   getSectionById,
   updateSection,
-} from "../controllers/sectionController";
+} from "../controllers/sectionController.js";
 import {
   createVideo,
   getVideosBySection,
-} from "../controllers/videoController";
+} from "../controllers/videoController.js";
 import {
   authenticateUser,
   authorizeRoles,
-} from "../middlewares/authMiddleware";
+} from "../middlewares/authMiddleware.js";
 
 const sectionRouter = express.Router();
 

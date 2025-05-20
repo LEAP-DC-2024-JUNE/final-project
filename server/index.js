@@ -1,18 +1,28 @@
 import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
 import cors from "cors";
-import userRouter from "./routers/userRoutes";
-import courseRouter from "./routers/courseRoutes";
-import sectionRouter from "./routers/sectionRoutes";
-import videoRouter from "./routers/videoRoutes";
-import paymentRouter from "./routers/paymentRoutes";
-import enrollmentRouter from "./routers/enrollmentRoutes";
+import { clerkMiddleware } from "@clerk/express";
+import userRouter from "./routers/userRoutes.js";
+import courseRouter from "./routers/courseRoutes.js";
+import sectionRouter from "./routers/sectionRoutes.js";
+import videoRouter from "./routers/videoRoutes.js";
+import paymentRouter from "./routers/paymentRoutes.js";
+import enrollmentRouter from "./routers/enrollmentRoutes.js";
 
 const app = express();
 const PORT = 3001;
 
 app.use(express.json());
-app.use(cors());
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
+app.use(clerkMiddleware());
 
 app.use("/api/users", userRouter);
 app.use("/api/courses", courseRouter);

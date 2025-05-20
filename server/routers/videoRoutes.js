@@ -3,11 +3,11 @@ import {
   deleteVideo,
   getVideoById,
   updateVideo,
-} from "../controllers/videoController";
+} from "../controllers/videoController.js";
 import {
   authenticateUser,
   authorizeRoles,
-} from "../middlewares/authMiddleware";
+} from "../middlewares/authMiddleware.js";
 
 const videoRouter = express.Router();
 
