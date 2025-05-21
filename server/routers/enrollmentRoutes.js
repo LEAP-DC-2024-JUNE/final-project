@@ -4,11 +4,11 @@ import {
   getAllEnrollments,
   getEnrollmentsByCourse,
   getEnrollmentsByUser,
-} from "../controllers/enrollmentController";
+} from "../controllers/enrollmentController.js";
 import {
   authenticateUser,
   authorizeRoles,
-} from "../middlewares/authMiddleware";
+} from "../middlewares/authMiddleware.js";
 
 const enrollmentRouter = express.Router();
 

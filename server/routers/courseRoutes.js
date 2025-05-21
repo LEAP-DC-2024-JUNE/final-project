@@ -5,15 +5,15 @@ import {
   getAllCourses,
   getCourseById,
   updateCourse,
-} from "../controllers/courseController";
+} from "../controllers/courseController.js";
 import {
   createSection,
   getSectionsByCourse,
-} from "../controllers/sectionController";
+} from "../controllers/sectionController.js";
 import {
   authenticateUser,
   authorizeRoles,
-} from "../middlewares/authMiddleware";
+} from "../middlewares/authMiddleware.js";
 
 const courseRouter = express.Router();
 

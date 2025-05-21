@@ -1,9 +1,12 @@
+"use client";
 import { Card, CardContent } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 import * as motion from "motion/react-client";
 import Image from "next/image";
 import Teacher from "../svg/teacher.svg";
 import Student from "../svg/student.svg";
 const Home = () => {
+  const router = useRouter();
   return (
     <div className="flex flex-col justify-center items-center h-screen gap-5 p-4">
       <h1 className="text-4xl font-bold text-center">Welcome to ClassHub!</h1>
@@ -14,6 +17,7 @@ const Home = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="flex-1"
+          onClick={() => router.push("/sign-up?role=INSTRUCTOR")}
         >
           <Card className="h-64 cursor-pointer hover:shadow-lg transition-shadow">
             <CardContent className="flex flex-col items-center justify-center h-full p-6">
@@ -37,6 +41,7 @@ const Home = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="flex-1"
+          onClick={() => router.push("/sign-up?role=STUDENT")}
         >
           <Card className="h-64 cursor-pointer hover:shadow-lg transition-shadow">
             <CardContent className="flex flex-col items-center justify-center h-full p-6">

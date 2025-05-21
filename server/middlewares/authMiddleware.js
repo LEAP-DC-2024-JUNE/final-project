@@ -1,23 +1,54 @@
-import prisma from "../lib/prisma";
+// import prisma from "../lib/prisma.js";
+
+// export const authenticateUser = async (req, res, next) => {
+//   const clerkUserId = req.params.userId;
+
+//   if (!clerkUserId) {
+//     return res.status(401).json({ message: "Unauthorized" });
+//   }
+
+//   try {
+//     const user = await prisma.user.findUnique({
+//       where: { clerkId: clerkUserId },
+//     });
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     req.user = user;
+
+//     next();
+//   } catch (error) {
+//     res.status(500).json({ message: "Server error during authentication" });
+//   }
+// };
+
+import { getAuth } from "@clerk/express";
+import prisma from "../lib/prisma.js";
 
 export const authenticateUser = async (req, res, next) => {
-  const clerkUserId = req.params.userId;
+  const { userId: clerkId } = getAuth(req);
 
-  if (!clerkUserId) {
-    return res.status(401).json({ message: "Unauthorized" });
+  if (!clerkId) {
+    return res.status(401).json({ message: "Unauthorized: Invalid session" });
+  }
+
+  if (req.path === "/sync") {
+    req.clerkId = clerkId;
+    return next();
   }
 
   try {
     const user = await prisma.user.findUnique({
-      where: { clerkId: clerkUserId },
+      where: { clerkId },
     });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found in DB" });
     }
 
     req.user = user;
-
     next();
   } catch (error) {
     res.status(500).json({ message: "Server error during authentication" });
