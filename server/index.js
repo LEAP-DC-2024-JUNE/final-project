@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-dotenv.config();
 import cors from "cors";
 import { clerkMiddleware } from "@clerk/express";
 import userRouter from "./routers/userRoutes.js";
@@ -10,12 +9,11 @@ import videoRouter from "./routers/videoRoutes.js";
 import paymentRouter from "./routers/paymentRoutes.js";
 import enrollmentRouter from "./routers/enrollmentRoutes.js";
 import { PrismaClient } from "@prisma/client";
-import prisma from "./prisma/prisma.js";
+
+dotenv.config();
 
 const app = express();
 const PORT = 3001;
-
-app.use(express.json());
 
 let prisma;
 if (!globalThis.prisma) {
@@ -23,9 +21,10 @@ if (!globalThis.prisma) {
 }
 prisma = globalThis.prisma;
 
+app.use(express.json());
+
 app.use(
   cors({
-    // origin: "http://localhost:3000",
     origin: "https://suraafrontend.vercel.app",
     credentials: true,
   })
@@ -50,10 +49,8 @@ app.get("/", async (req, res) => {
       details: error.message,
     });
   }
-  // Don't disconnect here as it might affect other routes
 });
 
-// app.get("/", (req, res) => res.send("Express on Vercel"));
 app.listen(PORT, () => {
   console.log(`Server running on:${PORT}`);
 });
