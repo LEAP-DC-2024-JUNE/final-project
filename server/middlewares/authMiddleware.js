@@ -28,7 +28,8 @@ import { getAuth } from "@clerk/express";
 import prisma from "../lib/prisma.js";
 
 export const authenticateUser = async (req, res, next) => {
-  const { userId: clerkId } = getAuth(req);
+  const { userId: clerkId } = req.auth;
+  console.log(clerkId, req.auth);
 
   if (!clerkId) {
     return res.status(401).json({ message: "Unauthorized: Invalid session" });
