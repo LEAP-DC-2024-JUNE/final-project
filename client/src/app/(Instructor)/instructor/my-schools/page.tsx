@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import MySchools from "@/components/Instructor/MySchools";
 
-const MySchool = () => {
+const MySchoolPage = () => {
   return (
     <div>
       <MySchools />
@@ -9,4 +9,4 @@ const MySchool = () => {
   );
 };
 
-export default MySchool;
+export default MySchoolPage;

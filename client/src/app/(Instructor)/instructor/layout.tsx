@@ -7,9 +7,7 @@ export default function InstructorLayout({
   return (
     <div className="flex">
       <InstructorSideMenu />
-      <main className=" ml-[365px] w-full h-auto bg-[#F4F4F5] px-5 pb-10">
-        {children}
-      </main>
+      <main className=" ml-[365px] w-full h-auto ">{children}</main>
     </div>
   );
 }

@@ -1,10 +1,9 @@
-import AddSchool from "@/components/Instructor/CreateSchool";
-import React from "react";
+import CreateSchoolPage from "@/components/Instructor/CreateSchool";
 
 const CreateSchool = () => {
   return (
     <div>
-      <AddSchool />
+      <CreateSchoolPage />
     </div>
   );
 };

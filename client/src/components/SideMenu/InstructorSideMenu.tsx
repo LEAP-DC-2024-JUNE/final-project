@@ -1,67 +1,100 @@
 "use client";
+import { motion } from "framer-motion";
 import React from "react";
 import Link from "next/link";
-import { Button } from "../ui/button";
+import { useClerk } from "@clerk/nextjs";
+import { usePathname } from "next/navigation";
 import { CirclePlus, LogOut, School } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { SignOutButton } from "@clerk/nextjs";
-import { usePathname } from "next/navigation";
 
 const InstructorSideMenu = () => {
   const pathname = usePathname();
+  const { signOut } = useClerk();
+
+  const handleSignOut = async () => {
+    await signOut();
+    window.location.href = "/";
+  };
   return (
-    <div className="w-[367px] min-h-screen bg-zinc-100 flex flex-col items-center justify-between fixed left-0 top-0 bottom-0 p-5">
+    <div className="w-[366px] min-h-screen bg-zinc-100 flex flex-col items-center justify-between fixed left-0 top-0 bottom-0 p-5">
       <div className="flex flex-col justify-between gap-10 items-center">
         <p className="font-extrabold text-[30px]">SURAA</p>
         <Avatar className="w-40 h-40">
           <AvatarImage
-            // src="https://res.cloudinary.com/your-cloud-name/image/upload/v1234567890/user-avatar.jpg"
-            // alt="User Avatar"
             src="https://github.com/shadcn.png"
             alt="@shadcn"
             className="w-40 h-40 object-cover"
           />
           <AvatarFallback className="w-40 h-40 text-2xl">U</AvatarFallback>
         </Avatar>
-        <p>Your email</p>
+        <div>
+          <p>Your name</p>
+          <p>Your email</p>
+        </div>
       </div>
-      <div className="flex flex-col gap-20">
-        <Link href="/instructor/my-schools">
-          <Button
-            variant="ghost"
-            className={`flex items-center gap-5 transition-colors ${
-              pathname === "/instructor/my-schools"
-                ? "bg-zinc-800 text-white"
-                : ""
-            }`}
+
+      <div className="flex flex-col gap-16">
+        <Link href="/instructor/my-schools" className="group cursor-pointer">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center gap-5"
           >
-            <School className="!w-8 !h-8 text-gray-500 hover:text-zinc-700 transition-colors" />
-            <span className="text-zinc-500 text-[20px] hover:text-zinc-600 transition-colors">
+            <School
+              className={`!w-8 !h-8 transition-colors group-hover:text-orange-400 ${
+                pathname === "/instructor/my-schools"
+                  ? "text-orange-400"
+                  : "text-gray-500"
+              }`}
+            />
+            <span
+              className={`text-[20px] font-medium transition-colors group-hover:text-orange-400 ${
+                pathname === "/instructor/my-schools"
+                  ? "text-orange-400"
+                  : "text-zinc-500"
+              }`}
+            >
               My Schools
             </span>
-          </Button>
+          </motion.div>
         </Link>
 
-        <Link href="/instructor/create-school">
-          <Button
-            variant="ghost"
-            className={`flex items-center gap-5 transition-colors ${
-              pathname === "/instructor/create-school"
-                ? "bg-zinc-800 text-white"
-                : ""
-            }`}
+        <Link href="/instructor/create-school" className="group cursor-pointer">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center gap-5"
           >
-            <CirclePlus className="!w-8 !h-8" color="gray" />
-            <span className="text-zinc-500 text-[20px]">Create New School</span>
-          </Button>
+            <CirclePlus
+              className={`!w-8 !h-8 transition-colors group-hover:text-orange-400 ${
+                pathname === "/instructor/create-school"
+                  ? "text-orange-400"
+                  : "text-gray-500"
+              }`}
+            />
+            <span
+              className={`text-[20px] font-medium transition-colors group-hover:text-orange-400 ${
+                pathname === "/instructor/create-school"
+                  ? "text-orange-400"
+                  : "text-zinc-500"
+              }`}
+            >
+              Create New School
+            </span>
+          </motion.div>
         </Link>
 
-        <div className="flex items-center gap-5 pl-4">
-          <LogOut className="!w-8 !h-8" color="gray" />
-          <span className="text-zinc-500 text-[20px] font-semibold">
-            <SignOutButton />
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleSignOut}
+          className="group flex items-center gap-5 pl-1 rounded-md p-2 transition-colors cursor-pointer"
+        >
+          <LogOut className="!w-8 !h-8 text-gray-500 transition-colors group-hover:text-orange-400" />
+          <span className="text-zinc-500 text-[20px] font-semibold transition-colors group-hover:text-orange-400">
+            Sign Out
           </span>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
