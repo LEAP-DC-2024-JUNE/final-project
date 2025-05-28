@@ -18,7 +18,10 @@ const InstructorSideMenu = () => {
   return (
     <div className="w-[366px] min-h-screen bg-zinc-100 flex flex-col items-center justify-between fixed left-0 top-0 bottom-0 p-5">
       <div className="flex flex-col justify-between gap-10 items-center">
-        <p className="font-extrabold text-[30px]">SURAA</p>
+        <div className=" flex gap-1 ">
+          <img src="../suraaLogo.svg" alt="logo" width={33} />
+          <h1 className=" text-3xl font-extrabold ">SURAA</h1>
+        </div>
         <Avatar className="w-40 h-40">
           <AvatarImage
             src="https://github.com/shadcn.png"

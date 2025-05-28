@@ -12,7 +12,7 @@ import {
 } from "../middlewares/authMiddleware.js";
 
 const userRouter = express.Router();
-userRouter.post("/sync", authenticateUser, syncUser);
+userRouter.post("/sync", syncUser);
 
 userRouter.get("/", authenticateUser, authorizeRoles("ADMIN"), getAllUsers);
 userRouter.get("/me", authenticateUser, getUserById);

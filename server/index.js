@@ -25,10 +25,20 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "https://suraafrontend.vercel.app",
+    origin: ["http://localhost:3000", "https://suraafrontend.vercel.app"],
     credentials: true,
   })
 );
+
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    res.sendStatus(204);
+  } else {
+    next();
+  }
+});
+app.set("trust proxy", 1);
+
 app.use(clerkMiddleware());
 
 app.use("/api/users", userRouter);
