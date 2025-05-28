@@ -1,11 +1,12 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useUser, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SignUpSuccess() {
   const { user, isSignedIn } = useUser();
+  const { getToken } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -18,25 +19,36 @@ export default function SignUpSuccess() {
     setIsLoading(true);
 
     try {
+      const token = await getToken({ template: "suraa" });
+
+      if (!token) {
+        throw new Error("No token found. Please sign in again.");
+      }
       const role = localStorage.getItem("selectedRole") || "STUDENT";
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/sync`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify({
             email: user.primaryEmailAddress?.emailAddress,
             role,
           }),
         }
       );
+      console.log(token);
 
       const data = await res.json();
 
-      if (data?.success) {
+      if (data?.success && role == "INSTRUCTOR") {
         localStorage.removeItem("selectedRole");
-        router.push("/dashboard");
+        router.push("/instructor/dashboard");
+      } else if (data?.success && role == "STUDENT") {
+        localStorage.removeItem("selectedRole");
+        router.push("/student/dashboard");
       } else {
         throw new Error(data?.error || "Failed to sync user.");
       }
@@ -62,8 +74,8 @@ export default function SignUpSuccess() {
           disabled={isLoading}
           className={`px-6 py-3 rounded text-white transition ${
             isLoading
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-gray-500 hover:bg-black"
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-black hover:bg-gray-400"
           }`}
         >
           {isLoading ? "Setting up..." : "Continue"}
