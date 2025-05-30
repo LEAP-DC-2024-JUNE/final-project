@@ -3,7 +3,7 @@ import {
   createCourse,
   deleteCourse,
   getAllCourses,
-  getCourseById,
+  getCoursesByInstructor,
   updateCourse,
 } from "../controllers/courseController.js";
 import {
@@ -18,7 +18,12 @@ import {
 const courseRouter = express.Router();
 
 courseRouter.get("/", getAllCourses);
-courseRouter.get("/:id", getCourseById);
+courseRouter.get(
+  "/instructor/me",
+  authenticateUser,
+  authorizeRoles("INSTRUCTOR"),
+  getCoursesByInstructor
+);
 
 courseRouter.post(
   "/",
