@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import MySchools from "@/components/Instructor/MySchools";
+import MySchools from "@/components/Instructor/Courses/MyCourses";
 
 const MySchoolPage = () => {
   return (

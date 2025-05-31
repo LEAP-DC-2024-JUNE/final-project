@@ -1,8 +1,8 @@
 "use client";
-import SchoolCart from "./SchoolCart";
+import CourseCard from "./CourseCard";
 import { motion } from "framer-motion";
 
-const MySchools = () => {
+const MyCourses = () => {
   return (
     <div className=" flex flex-col items-start justify-between mx-10">
       <motion.div
@@ -10,16 +10,16 @@ const MySchools = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <p className="font-medium">Schools I own:</p>
+        <p className="font-medium">Courses I own:</p>
         <div className=" py-10 flex flex-row items-center gap-10 flex-wrap">
-          <SchoolCart />
-          <SchoolCart />
-          <SchoolCart />
-          <SchoolCart />
+          <CourseCard />
+          <CourseCard />
+          <CourseCard />
+          <CourseCard />
         </div>
       </motion.div>
     </div>
   );
 };
 
-export default MySchools;
+export default MyCourses;

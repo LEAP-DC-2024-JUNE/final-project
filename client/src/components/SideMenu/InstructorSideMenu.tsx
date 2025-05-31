@@ -57,7 +57,7 @@ const InstructorSideMenu = () => {
                   : "text-zinc-500"
               }`}
             >
-              My Schools
+              My Courses
             </span>
           </motion.div>
         </Link>
@@ -82,7 +82,7 @@ const InstructorSideMenu = () => {
                   : "text-zinc-500"
               }`}
             >
-              Create New School
+              Create New Course
             </span>
           </motion.div>
         </Link>

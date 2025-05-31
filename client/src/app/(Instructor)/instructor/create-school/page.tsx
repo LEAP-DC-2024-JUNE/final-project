@@ -1,4 +1,4 @@
-import CreateSchoolPage from "@/components/Instructor/CreateSchool";
+import CreateSchoolPage from "@/components/Instructor/Create-Course/CreateSCourse";
 
 const CreateSchool = () => {
   return (
