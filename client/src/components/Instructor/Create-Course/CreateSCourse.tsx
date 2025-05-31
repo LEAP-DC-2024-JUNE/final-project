@@ -4,9 +4,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { School } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CreateSchoolModal } from "./CreateSchoolModal";
+import { CreateCourseModal1 } from "./CreateCourseModal1";
 
-export default function CreateSchoolPage() {
+export default function CreateCoursePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -21,7 +21,7 @@ export default function CreateSchoolPage() {
           <div className="p-4 bg-zinc-100 rounded-full text-center">
             <School className="w-12 h-12 text-zinc-400" />
           </div>
-          <h1 className="text-3xl font-bold">Create a New School</h1>
+          <h1 className="text-3xl font-bold">Create a New Course</h1>
           <p className="text-zinc-500 max-w-md">
             Start your teaching journey by creating a new school. Add courses,
             upload videos, and share your knowledge with students.
@@ -36,7 +36,7 @@ export default function CreateSchoolPage() {
         </Button>
       </motion.div>
 
-      <CreateSchoolModal
+      <CreateCourseModal1
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />

@@ -1,8 +1,9 @@
 "use client";
-import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+
 import { motion } from "framer-motion";
 
-const SchoolCart = () => {
+const CourseCard = () => {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
@@ -20,4 +21,4 @@ const SchoolCart = () => {
   );
 };
 
-export default SchoolCart;
+export default CourseCard;
