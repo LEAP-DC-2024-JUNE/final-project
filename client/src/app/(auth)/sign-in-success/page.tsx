@@ -16,7 +16,7 @@ export default function SignInSuccess() {
       if (!isSignedIn || !user) return;
 
       try {
-        const token = await getToken();
+        const token = await getToken({ template: "suraa" });
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/me`,
           {
@@ -28,6 +28,7 @@ export default function SignInSuccess() {
         );
 
         const data = await res.json();
+        console.log(token);
 
         if (res.ok && data.user?.role) {
           setRole(data.user.role);
