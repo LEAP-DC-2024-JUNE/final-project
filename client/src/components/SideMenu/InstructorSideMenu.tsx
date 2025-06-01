@@ -31,8 +31,7 @@ const InstructorSideMenu = () => {
           <AvatarFallback className="w-40 h-40 text-2xl">U</AvatarFallback>
         </Avatar>
         <div>
-          <p>Your name</p>
-          <p>Your email</p>
+          <p>Your Username</p>
         </div>
       </div>
 
