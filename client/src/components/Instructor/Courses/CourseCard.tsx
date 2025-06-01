@@ -3,19 +3,25 @@
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Course } from "@/utils/types";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 interface CourseCardProps {
   course: Course;
 }
 
 const CourseCard = ({ course }: CourseCardProps) => {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/course/${course.id}`);
+  };
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       className=" cursor-pointer"
     >
-      <Card className=" w-[300px] h-[300px]">
+      <Card className=" w-[300px] h-[300px]" onClick={handleClick}>
         <div className=" flex flex-col justify-between items-center">
           <CardTitle>{course.title}</CardTitle>
           <CardContent>
