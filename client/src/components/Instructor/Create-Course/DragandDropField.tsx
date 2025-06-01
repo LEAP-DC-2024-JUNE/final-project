@@ -1,9 +1,12 @@
+"use client";
+
 import { useState } from "react";
 import Image from "next/legacy/image";
 
 export const DragAndDropField = ({
   handleFileSelection,
   triggerFileInputClick,
+  isUploading,
 }: any) => {
   const [isDragging, setIsDragging] = useState(false);
 
@@ -11,25 +14,41 @@ export const DragAndDropField = ({
     event.preventDefault();
     setIsDragging(false);
 
+    if (isUploading) return;
+
     const droppedFile = Array.from(event.dataTransfer.files).at(0);
-    handleFileSelection(droppedFile);
+    if (droppedFile) {
+      handleFileSelection(droppedFile);
+    }
   };
 
   const handleDragOver = (event: any) => {
     event.preventDefault();
-    setIsDragging(true);
+    if (!isUploading) {
+      setIsDragging(true);
+    }
   };
 
   const handleDragLeave = () => setIsDragging(false);
+
+  const handleClick = () => {
+    if (!isUploading) {
+      triggerFileInputClick();
+    }
+  };
 
   return (
     <div
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
-      onClick={triggerFileInputClick}
-      className={`flex flex-col items-center justify-center gap-y-2 cursor-pointer bg-[#e7eeff] h-[180px] border rounded-md ${
-        isDragging ? "border-dashed border-gray-600" : "border-solid"
+      onClick={handleClick}
+      className={`flex flex-col items-center justify-center gap-y-2 h-[180px] border rounded-md transition-all ${
+        isUploading
+          ? "cursor-not-allowed bg-gray-100 border-gray-300"
+          : isDragging
+          ? "cursor-pointer bg-[#e7eeff] border-dashed border-gray-600"
+          : "cursor-pointer bg-[#e7eeff] border-solid"
       }`}
     >
       <div className="flex items-center justify-center bg-white rounded-full w-7 h-7">
@@ -43,8 +62,12 @@ export const DragAndDropField = ({
       </div>
 
       <h4 className="text-sm text-center">
-        Choose a file or drag & drop it here
+        {isUploading ? "Uploading..." : "Choose a file or drag & drop it here"}
       </h4>
+
+      {!isUploading && (
+        <p className="text-xs text-gray-500">JPG, PNG, GIF up to 5MB</p>
+      )}
     </div>
   );
 };
