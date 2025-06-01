@@ -24,7 +24,7 @@ export default function SignUpSuccess() {
       if (!token) {
         throw new Error("No token found. Please sign in again.");
       }
-      const role = localStorage.getItem("selectedRole") || "STUDENT";
+      const role = localStorage.getItem("selectedRole");
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/sync`,
         {

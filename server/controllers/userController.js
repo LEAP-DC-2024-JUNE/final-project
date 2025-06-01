@@ -67,7 +67,8 @@ export const syncUser = async (req, res) => {
         data: {
           clerkId,
           email,
-          role: role === "INSTRUCTOR" ? "INSTRUCTOR" : "STUDENT",
+          // role: role === "INSTRUCTOR" ? "INSTRUCTOR" : "STUDENT",
+          role,
         },
       });
     }

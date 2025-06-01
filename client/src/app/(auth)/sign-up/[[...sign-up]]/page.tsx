@@ -6,7 +6,7 @@ import { useEffect } from "react";
 
 export default function SignUpPage() {
   const searchParams = useSearchParams();
-  const role = searchParams.get("role") || "STUDENT";
+  const role = searchParams.get("role");
 
   useEffect(() => {
     if (role) {
