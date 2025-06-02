@@ -12,8 +12,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import FileUpload from "./FileUpload";
+import CourseSection from "./CourseSection";
 
-interface CourseFormState {
+export interface CourseFormState {
   title: string;
   description: string;
   price: string;
@@ -22,7 +23,8 @@ interface CourseFormState {
 
 export function CreateCourseModal1({ isOpen, onClose }: any) {
   const [isLoading, setIsLoading] = useState(false);
-
+  const [showCourseSection, setShowCourseSection] = useState(false);
+  const [courseId, setCourseId] = useState<string | null>(null);
   const [formState, setFormState] = useState<CourseFormState>({
     title: "",
     description: "",
@@ -76,16 +78,11 @@ export function CreateCourseModal1({ isOpen, onClose }: any) {
         throw new Error("Failed to create course");
       }
 
+      const data = await response.json();
+
+      setCourseId(data.id);
       alert("Course created successfully!");
-
-      setFormState({
-        title: "",
-        description: "",
-        price: "",
-        imageUrl: "",
-      });
-
-      onClose();
+      setShowCourseSection(true);
     } catch (error: any) {
       console.error("Error creating course:", error);
       alert(error.message || "Something went wrong");
@@ -157,6 +154,10 @@ export function CreateCourseModal1({ isOpen, onClose }: any) {
               {isLoading ? "Creating..." : "Create Course"}
             </Button>
           </div>
+
+          {showCourseSection && courseId && (
+            <CourseSection formState={formState} courseId={courseId} />
+          )}
         </div>
       </DialogContent>
     </Dialog>
