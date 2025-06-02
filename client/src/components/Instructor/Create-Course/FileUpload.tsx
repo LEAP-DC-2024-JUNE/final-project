@@ -15,11 +15,12 @@ const FileUpload = ({ setFormState }: FileUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
 
   const CLOUD_NAME = "dd3imxxlm";
+  const UPLOAD_PRESET = "leapdc-preset";
 
   const uploadToCloudinary = async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", CLOUD_NAME);
+    formData.append("upload_preset", UPLOAD_PRESET);
 
     try {
       console.log("Uploading to Cloudinary...");

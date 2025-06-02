@@ -14,7 +14,7 @@ export const PreviewImage = ({
           src={imagePreviewUrl || "/placeholder.svg"}
           alt="preview"
           height={180}
-          width={416}
+          width={446}
           objectFit="cover"
           className="rounded-md"
         />
@@ -28,7 +28,7 @@ export const PreviewImage = ({
 
       {!isUploading && (
         <div
-          className="absolute top-1 right-12 flex items-center bg-gray-300 hover:bg-gray-400 justify-center w-6 h-6 rounded-full cursor-pointer transition-colors"
+          className="absolute top-4 right-4 flex items-center bg-gray-300 hover:bg-gray-400 justify-center w-6 h-6 rounded-full cursor-pointer transition-colors"
           onClick={resetFileInput}
         >
           ×
