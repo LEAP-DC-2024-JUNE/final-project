@@ -18,6 +18,33 @@ export const getAllCourses = async (req, res) => {
   }
 };
 
+export const getCourseById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const course = await prisma.course.findUnique({
+      where: { id },
+      include: {
+        instructor: true,
+        sections: {
+          include: {
+            videos: true,
+          },
+        },
+        enrollments: true,
+        payments: true,
+      },
+    });
+
+    if (!course) {
+      return res.status(404).json({ error: "Course not found" });
+    }
+
+    res.status(200).json(course);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch courses" });
+  }
+};
+
 export const getCoursesByInstructor = async (req, res) => {
   try {
     const { userId: clerkId } = getAuth(req);

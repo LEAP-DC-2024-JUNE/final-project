@@ -3,6 +3,7 @@ import {
   createCourse,
   deleteCourse,
   getAllCourses,
+  getCourseById,
   getCoursesByInstructor,
   updateCourse,
 } from "../controllers/courseController.js";
@@ -25,6 +26,7 @@ courseRouter.get(
   getCoursesByInstructor
 );
 
+courseRouter.get("/:id", getCourseById);
 courseRouter.post(
   "/",
   authenticateUser,
