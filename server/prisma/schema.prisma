@@ -1,83 +1,80 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-1.1.x"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model User {
-  id          String     @id @default(uuid())
-  clerkId     String     @unique
-  email       String     @unique
-  phoneNumber String?    // optional
-  role        Role       @default(STUDENT)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-
-  courses      Course[]       @relation("InstructorCourses")
-  enrollments  Enrollment[]
-  payments     Payment[]
+  id          String       @id @default(uuid())
+  clerkId     String       @unique
+  email       String       @unique
+  phoneNumber String?
+  role        Role         @default(STUDENT)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  courses     Course[]     @relation("InstructorCourses")
+  enrollments Enrollment[]
+  payments    Payment[]
 }
 
 model Course {
-  id          String     @id @default(uuid())
-  title       String
-  description String
-  price       Float
-  imageUrl    String    // ✅ new: optional course image
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-
-  instructor   User      @relation("InstructorCourses", fields: [instructorId], references: [id])
+  id           String       @id @default(uuid())
+  title        String
+  description  String
+  price        Float
+  imageUrl     String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
   instructorId String
-
+  instructor   User         @relation("InstructorCourses", fields: [instructorId], references: [id])
   enrollments  Enrollment[]
-  sections     Section[]
   payments     Payment[]
+  sections     Section[]
 }
 
 model Section {
   id        String   @id @default(uuid())
   name      String
-  course    Course   @relation(fields: [courseId], references: [id])
   courseId  String
-  videos    Video[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  course    Course   @relation(fields: [courseId], references: [id])
+  videos    Video[]
 }
 
 model Video {
-  id         String   @id @default(uuid())
-  title      String
-  url        String
-  section    Section  @relation(fields: [sectionId], references: [id])
-  sectionId  String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(uuid())
+  title     String
+  url       String
+  sectionId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  section   Section  @relation(fields: [sectionId], references: [id])
 }
 
 model Enrollment {
   id         String   @id @default(uuid())
-  user       User     @relation(fields: [userId], references: [id])
-  course     Course   @relation(fields: [courseId], references: [id])
   userId     String
   courseId   String
   enrolledAt DateTime @default(now())
+  course     Course   @relation(fields: [courseId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 }
 
 model Payment {
-  id         String   @id @default(uuid())
-  user       User     @relation(fields: [userId], references: [id])
-  course     Course   @relation(fields: [courseId], references: [id])
-  userId     String
-  courseId   String
-  amount     Int
-  stripeId   String
-  createdAt  DateTime @default(now())
+  id        String   @id @default(uuid())
+  userId    String
+  courseId  String
+  amount    Int
+  stripeId  String
+  createdAt DateTime @default(now())
+  course    Course   @relation(fields: [courseId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 enum Role {
