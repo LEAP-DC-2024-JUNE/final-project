@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { useUser, useAuth } from "@clerk/nextjs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 
 export default function SignInSuccess() {
   const [role, setRole] = useState<string | null>(null);
@@ -51,7 +51,7 @@ export default function SignInSuccess() {
     if (!role) return;
     setIsLoading(true);
 
-    if (redirectUrl) {
+    if (redirectUrl && redirectUrl !== "/sign-in-success") {
       router.push(redirectUrl);
     } else if (role === "INSTRUCTOR") {
       router.push("/instructor/dashboard");
@@ -61,26 +61,28 @@ export default function SignInSuccess() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-4 text-center">
-      <div className="border p-5 rounded-2xl bg-gray-50">
-        <h1 className="text-3xl font-bold mb-4">
-          You're successfully signed in!
-        </h1>
-        <p className="mb-6 text-gray-600 max-w-md">
-          Click the button below to access your dashboard.
-        </p>
-        <button
-          onClick={handleContinue}
-          disabled={isLoading || !role}
-          className={`px-6 py-3 rounded text-white transition ${
-            isLoading || !role
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-black hover:bg-gray-400"
-          }`}
-        >
-          {isLoading ? "Accessing..." : "Continue"}
-        </button>
+    <Suspense>
+      <div className="flex flex-col items-center justify-center min-h-screen px-4 text-center">
+        <div className="border p-5 rounded-2xl bg-gray-50">
+          <h1 className="text-3xl font-bold mb-4">
+            You're successfully signed in!
+          </h1>
+          <p className="mb-6 text-gray-600 max-w-md">
+            Click the button below to access your dashboard.
+          </p>
+          <button
+            onClick={handleContinue}
+            disabled={isLoading || !role}
+            className={`px-6 py-3 rounded text-white transition ${
+              isLoading || !role
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-black hover:bg-gray-400"
+            }`}
+          >
+            {isLoading ? "Accessing..." : "Continue"}
+          </button>
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 }
