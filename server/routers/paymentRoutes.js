@@ -2,9 +2,10 @@ import express from "express";
 import {
   createPayment,
   getAllPayments,
-  getPaymentsByCourse,
   getPaymentsByUser,
+  getPaymentsByCourse,
 } from "../controllers/paymentController.js";
+
 import {
   authenticateUser,
   authorizeRoles,
@@ -12,19 +13,26 @@ import {
 
 const paymentRouter = express.Router();
 
+// Create a payment (student)
+paymentRouter.post("/", authenticateUser, createPayment);
+
+// Admin: Get all payments
 paymentRouter.get(
   "/",
   authenticateUser,
   authorizeRoles("ADMIN"),
   getAllPayments
 );
+
+// User: Get their own payments
 paymentRouter.get("/user/:userId", authenticateUser, getPaymentsByUser);
+
+// Instructor/Admin: Get all payments for a specific course
 paymentRouter.get(
   "/course/:courseId",
   authenticateUser,
-  authorizeRoles("INSTRUCTOR"),
+  authorizeRoles("INSTRUCTOR", "ADMIN"),
   getPaymentsByCourse
 );
-paymentRouter.post("/", authenticateUser, createPayment);
 
 export default paymentRouter;
