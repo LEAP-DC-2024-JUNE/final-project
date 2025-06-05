@@ -46,22 +46,12 @@ export default function SignUpSuccess() {
 
       const data = await res.json();
 
-      // if (data?.success && role == "INSTRUCTOR") {
-      //   localStorage.removeItem("selectedRole");
-      //   router.push("/instructor/dashboard");
-      // } else if (data?.success && role == "STUDENT") {
-      //   localStorage.removeItem("selectedRole");
-      //   router.push("/student/dashboard");
-      // } else {
-      //   throw new Error(data?.error || "Failed to sync user.");
-      // }
-
-      if (redirectUrl) {
+      if (redirectUrl && redirectUrl !== "/sign-in-success") {
         router.push(redirectUrl);
-      } else if (data?.success && role == "INSTRUCTOR") {
+      } else if (data?.success && role === "INSTRUCTOR") {
         localStorage.removeItem("selectedRole");
         router.push("/instructor/dashboard");
-      } else if (data?.success && role == "STUDENT") {
+      } else if (data?.success && role === "STUDENT") {
         localStorage.removeItem("selectedRole");
         router.push("/student/dashboard");
       } else {

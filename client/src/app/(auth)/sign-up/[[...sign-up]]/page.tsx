@@ -7,7 +7,9 @@ import { useSearchParams } from "next/navigation";
 export default function SignUpPage() {
   const searchParams = useSearchParams();
   const role = searchParams.get("role");
-  const redirectUrl = searchParams.get("redirectUrl") || "/sign-up-success";
+  const rawRedirect = searchParams.get("redirectUrl");
+  const redirectUrl =
+    rawRedirect && rawRedirect !== "/sign-up-success" ? rawRedirect : null;
 
   useEffect(() => {
     if (role) {
@@ -18,7 +20,11 @@ export default function SignUpPage() {
   return (
     <div className="flex justify-center items-center min-h-screen">
       <SignUp
-        forceRedirectUrl={`/sign-up-success?redirectUrl=${redirectUrl}`}
+        forceRedirectUrl={
+          redirectUrl
+            ? `/sign-up-success?redirectUrl=${redirectUrl}`
+            : `/sign-up-success`
+        }
       />
     </div>
   );
