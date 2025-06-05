@@ -1,14 +1,17 @@
 "use client";
 
-import { useUser, useAuth } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useUser, useAuth } from "@clerk/nextjs";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SignUpSuccess() {
-  const { user, isSignedIn } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
+
   const { getToken } = useAuth();
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const { user, isSignedIn } = useUser();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirectUrl");
 
   const handleContinue = async () => {
     if (!isSignedIn || !user) {
@@ -43,7 +46,19 @@ export default function SignUpSuccess() {
 
       const data = await res.json();
 
-      if (data?.success && role == "INSTRUCTOR") {
+      // if (data?.success && role == "INSTRUCTOR") {
+      //   localStorage.removeItem("selectedRole");
+      //   router.push("/instructor/dashboard");
+      // } else if (data?.success && role == "STUDENT") {
+      //   localStorage.removeItem("selectedRole");
+      //   router.push("/student/dashboard");
+      // } else {
+      //   throw new Error(data?.error || "Failed to sync user.");
+      // }
+
+      if (redirectUrl) {
+        router.push(redirectUrl);
+      } else if (data?.success && role == "INSTRUCTOR") {
         localStorage.removeItem("selectedRole");
         router.push("/instructor/dashboard");
       } else if (data?.success && role == "STUDENT") {

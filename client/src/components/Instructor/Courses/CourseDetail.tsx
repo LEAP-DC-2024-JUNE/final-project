@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Course } from "@/utils/types";
 import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { CourseFooter } from "./CourseFooter";
 import { CourseAccordion } from "./CourseAccordion";
@@ -13,6 +14,7 @@ export const CourseDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const router = useRouter();
   const params = useParams();
   const id = params.id;
   const { getToken, userId } = useAuth();
@@ -24,18 +26,16 @@ export const CourseDetail = () => {
       try {
         const token = await getToken({ template: "suraa" });
 
-        if (!token) {
-          throw new Error("No token found. Please sign in again.");
-        }
+        const headers = {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        };
 
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/${id}`,
           {
             method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
+            headers,
           }
         );
 
@@ -98,7 +98,16 @@ export const CourseDetail = () => {
             {isInstructor ? (
               <p>You are instructor of this course</p>
             ) : (
-              <button className="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 px-4 rounded-md text-lg font-medium">
+              <button
+                className="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 px-4 rounded-md text-lg font-medium"
+                onClick={() => {
+                  if (!userId) {
+                    router.push(
+                      `/sign-in?redirectUrl=/course/${id}&role=STUDENT`
+                    );
+                  }
+                }}
+              >
                 Buy now
               </button>
             )}

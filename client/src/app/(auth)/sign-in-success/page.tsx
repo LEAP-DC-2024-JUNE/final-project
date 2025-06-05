@@ -1,15 +1,19 @@
 "use client";
 
-import { useUser, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useUser, useAuth } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 
 export default function SignInSuccess() {
-  const { user, isSignedIn } = useUser();
-  const { getToken } = useAuth();
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
   const [role, setRole] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { getToken } = useAuth();
+  const { user, isSignedIn } = useUser();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirectUrl");
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -47,7 +51,9 @@ export default function SignInSuccess() {
     if (!role) return;
     setIsLoading(true);
 
-    if (role === "INSTRUCTOR") {
+    if (redirectUrl) {
+      router.push(redirectUrl);
+    } else if (role === "INSTRUCTOR") {
       router.push("/instructor/dashboard");
     } else {
       router.push("/student/dashboard");

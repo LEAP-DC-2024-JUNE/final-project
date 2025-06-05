@@ -1,12 +1,13 @@
 "use client";
 
 import { SignUp } from "@clerk/nextjs";
-import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function SignUpPage() {
   const searchParams = useSearchParams();
   const role = searchParams.get("role");
+  const redirectUrl = searchParams.get("redirectUrl") || "/sign-up-success";
 
   useEffect(() => {
     if (role) {
@@ -16,7 +17,9 @@ export default function SignUpPage() {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <SignUp forceRedirectUrl={"/sign-up-success"} />
+      <SignUp
+        forceRedirectUrl={`/sign-up-success?redirectUrl=${redirectUrl}`}
+      />
     </div>
   );
 }
