@@ -64,14 +64,14 @@ sectionRouter.post(
 );
 
 sectionRouter.patch(
-  "/sections/:sectionId",
+  "/:sectionId",
   authenticateUser,
   authorizeRoles("INSTRUCTOR"),
   updateSection
 );
 
 sectionRouter.delete(
-  "/sections/:sectionId",
+  "/:sectionId",
   authenticateUser,
   authorizeRoles("INSTRUCTOR"),
   deleteSection

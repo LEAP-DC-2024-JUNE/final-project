@@ -7,12 +7,13 @@ import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { CourseFooter } from "./CourseFooter";
 import { CourseAccordion } from "./CourseAccordion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const CourseDetail = () => {
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const hasLoadedVideos = useRef(false); // Prevent re-fetch loop
 
   const router = useRouter();
   const params = useParams();
@@ -55,6 +56,48 @@ export const CourseDetail = () => {
 
     fetchCourse();
   }, [id]);
+
+  useEffect(() => {
+    if (
+      !course ||
+      !course.sections?.length ||
+      hasLoadedVideos.current // Don't re-fetch videos again
+    )
+      return;
+
+    const fetchVideosForAllSections = async () => {
+      try {
+        const token = await getToken({ template: "suraa" });
+
+        const updatedSections = await Promise.all(
+          course.sections.map(async (section) => {
+            const res = await fetch(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/videos/section/${section.id}`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            const videos = res.ok ? await res.json() : [];
+            return { ...section, videos };
+          })
+        );
+
+        hasLoadedVideos.current = true; // Mark videos as loaded
+        setCourse((prev) =>
+          prev ? { ...prev, sections: updatedSections } : prev
+        );
+      } catch (err) {
+        console.error("Error fetching videos by section:", err);
+      }
+    };
+
+    fetchVideosForAllSections();
+  }, [course, getToken]);
 
   const isInstructor = course?.instructor.clerkId === userId;
 

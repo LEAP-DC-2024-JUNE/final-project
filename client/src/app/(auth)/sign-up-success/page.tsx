@@ -30,6 +30,7 @@ export default function SignUpSuccess() {
       const role = localStorage.getItem("selectedRole");
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/sync`,
+
         {
           method: "POST",
           headers: {
@@ -42,7 +43,7 @@ export default function SignUpSuccess() {
           }),
         }
       );
-      console.log(token);
+      console.log(process.env.NEXT_PUBLIC_API_BASE_URL);
 
       const data = await res.json();
 

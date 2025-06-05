@@ -7,9 +7,10 @@ import Teacher from "../svg/teacher.svg";
 import Student from "../svg/student.svg";
 const Home = () => {
   const router = useRouter();
+
   return (
     <div className="flex flex-col justify-center items-center h-screen gap-5 p-4">
-      <h1 className="text-4xl font-bold text-center">Welcome to ClassHub!</h1>
+      <h1 className="text-4xl font-bold text-center">Welcome to SURAA!</h1>
       <p className="text-lg mb-6">Choose your role to continue</p>
 
       <div className="flex flex-col md:flex-row gap-6 w-full max-w-4xl">

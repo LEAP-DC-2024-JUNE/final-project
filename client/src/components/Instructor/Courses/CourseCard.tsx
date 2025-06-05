@@ -28,7 +28,7 @@ const CourseCard = ({ course }: CourseCardProps) => {
             <img
               src={course.imageUrl}
               alt={course.title}
-              className="w-full h-32 object-cover rounded"
+              className="w-full h-40 object-cover rounded"
             />
           </CardContent>
           <CardFooter className="flex flex-col">

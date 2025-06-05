@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import FileUpload from "./FileUpload";
-import CourseSection from "./CourseSection";
 
 export interface CourseFormState {
   title: string;
@@ -21,10 +20,8 @@ export interface CourseFormState {
   imageUrl: string;
 }
 
-export function CreateCourseModal1({ isOpen, onClose }: any) {
+export function CreateCourseModal1({ isOpen, onClose, onCourseCreated }: any) {
   const [isLoading, setIsLoading] = useState(false);
-  const [showCourseSection, setShowCourseSection] = useState(false);
-  const [courseId, setCourseId] = useState<string | null>(null);
   const [formState, setFormState] = useState<CourseFormState>({
     title: "",
     description: "",
@@ -34,10 +31,7 @@ export function CreateCourseModal1({ isOpen, onClose }: any) {
   const { getToken } = useAuth();
 
   const updateFormField = (field: keyof CourseFormState, value: any) => {
-    setFormState((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setFormState((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async () => {
@@ -52,10 +46,7 @@ export function CreateCourseModal1({ isOpen, onClose }: any) {
 
     try {
       const token = await getToken({ template: "suraa" });
-
-      if (!token) {
-        throw new Error("No token found. Please sign in again.");
-      }
+      if (!token) throw new Error("No token found. Please sign in again.");
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses`,
@@ -74,15 +65,11 @@ export function CreateCourseModal1({ isOpen, onClose }: any) {
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to create course");
-      }
+      if (!response.ok) throw new Error("Failed to create course");
 
       const data = await response.json();
 
-      setCourseId(data.id);
-      alert("Course created successfully!");
-      setShowCourseSection(true);
+      onCourseCreated(formState, data.id);
     } catch (error: any) {
       console.error("Error creating course:", error);
       alert(error.message || "Something went wrong");
@@ -154,10 +141,6 @@ export function CreateCourseModal1({ isOpen, onClose }: any) {
               {isLoading ? "Creating..." : "Create Course"}
             </Button>
           </div>
-
-          {showCourseSection && courseId && (
-            <CourseSection formState={formState} courseId={courseId} />
-          )}
         </div>
       </DialogContent>
     </Dialog>
