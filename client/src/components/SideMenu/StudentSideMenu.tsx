@@ -36,7 +36,7 @@ const StudentSideMenu = () => {
       </div>
 
       <div className="flex flex-col gap-16">
-        <Link href="/instructor/my-schools" className="group cursor-pointer">
+        <Link href="/student/dashboard" className="group cursor-pointer">
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -44,14 +44,14 @@ const StudentSideMenu = () => {
           >
             <NotebookPen
               className={`!w-8 !h-8 transition-colors group-hover:text-orange-400 ${
-                pathname === "/instructor/my-schools"
+                pathname === "/student/dashboard"
                   ? "text-orange-400"
                   : "text-gray-500"
               }`}
             />
             <span
               className={`text-[20px] font-medium transition-colors group-hover:text-orange-400 ${
-                pathname === "/instructor/my-schools"
+                pathname === "/student/dashboard"
                   ? "text-orange-400"
                   : "text-zinc-500"
               }`}
