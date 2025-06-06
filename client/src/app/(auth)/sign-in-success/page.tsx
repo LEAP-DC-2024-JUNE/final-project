@@ -54,9 +54,9 @@ export default function SignInSuccess() {
     if (redirectUrl && redirectUrl !== "/sign-in-success") {
       router.push(redirectUrl);
     } else if (role === "INSTRUCTOR") {
-      router.push("/instructor/dashboard");
+      router.push("/instructor/my-schools");
     } else {
-      router.push("/student/dashboard");
+      router.push("/student/my-course");
     }
   };
 

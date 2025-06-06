@@ -158,15 +158,17 @@ export const updateSection = async (req, res) => {
 };
 
 export const deleteSection = async (req, res) => {
-  const { id } = req.params;
+  const { sectionId } = req.params;
   const { id: userId } = req.user;
 
   try {
+    if (!sectionId) {
+      return res.status(400).json({ error: "Section ID is required" });
+    }
+
     const section = await prisma.section.findUnique({
-      where: { id },
-      include: {
-        course: true,
-      },
+      where: { id: sectionId },
+      include: { course: true },
     });
 
     if (!section) {
@@ -179,10 +181,11 @@ export const deleteSection = async (req, res) => {
         .json({ error: "Unauthorized to delete this section" });
     }
 
-    await prisma.section.delete({ where: { id } });
+    await prisma.section.delete({ where: { id: sectionId } });
 
     res.status(200).json({ message: "Section deleted successfully" });
   } catch (error) {
+    console.error("Delete section error:", error);
     res.status(400).json({ error: "Failed to delete section" });
   }
 };
