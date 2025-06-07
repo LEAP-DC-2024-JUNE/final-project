@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 import { CourseFooter } from "./CourseFooter";
 import { CourseAccordion } from "./CourseAccordion";
 import { useEffect, useRef, useState } from "react";
+import { BuyButton } from "@/components/BuyButton";
 
 export const CourseDetail = () => {
   const [course, setCourse] = useState<Course | null>(null);
@@ -141,18 +142,11 @@ export const CourseDetail = () => {
             {isInstructor ? (
               <p>You are instructor of this course</p>
             ) : (
-              <button
-                className="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 px-4 rounded-md text-lg font-medium"
-                onClick={() => {
-                  if (!userId) {
-                    router.push(
-                      `/sign-in?redirectUrl=/course/${id}&role=STUDENT`
-                    );
-                  }
-                }}
-              >
-                Buy now
-              </button>
+              <BuyButton
+                courseId={course.id}
+                title={course.title}
+                amount={course.price}
+              />
             )}
           </div>
         </div>

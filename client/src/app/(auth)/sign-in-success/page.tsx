@@ -56,7 +56,7 @@ export default function SignInSuccess() {
     } else if (role === "INSTRUCTOR") {
       router.push("/instructor/my-schools");
     } else {
-      router.push("/student/my-course");
+      router.push("/student/dashboard");
     }
   };
 
