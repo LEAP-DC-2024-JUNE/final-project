@@ -1,24 +1,14 @@
 import Stripe from "stripe";
-import { auth } from "@clerk/nextjs/server";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export const createCheckoutSession = async (req) => {
-  const { userId } = auth();
+export const createCheckoutSession = async (req, res) => {
+  const userId = req.user.id;
 
-  if (!userId) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-    });
-  }
-
-  const body = await req.json();
-  const { courseId, title, amount } = body;
+  const { courseId, title, amount } = req.body;
 
   if (!courseId || !title || !amount) {
-    return new Response(JSON.stringify({ error: "Missing required fields" }), {
-      status: 400,
-    });
+    return res.status(400).json({ error: "Missing required fields" });
   }
 
   try {
@@ -40,10 +30,28 @@ export const createCheckoutSession = async (req) => {
       metadata: { userId, courseId },
     });
 
-    return new Response(JSON.stringify({ url: session.url }), { status: 200 });
+    res.status(200).json({ url: session.url });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
+    console.error("Stripe error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getStripeSession = async (req, res) => {
+  const sessionId = req.query.session_id;
+
+  if (!sessionId) {
+    return res.status(400).json({ error: "Missing session_id" });
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    res.status(200).json({
+      amount_total: session.amount_total,
     });
+  } catch (error) {
+    console.error("Stripe session error:", error);
+    res.status(500).json({ error: error.message });
   }
 };

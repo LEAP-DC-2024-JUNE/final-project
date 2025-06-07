@@ -61,7 +61,7 @@ const StudentSideMenu = () => {
           </motion.div>
         </Link>
 
-        <Link href="/instructor/create-school" className="group cursor-pointer">
+        <Link href="/student/my-enrollments" className="group cursor-pointer">
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -69,14 +69,14 @@ const StudentSideMenu = () => {
           >
             <History
               className={`!w-8 !h-8 transition-colors group-hover:text-orange-400 ${
-                pathname === "/instructor/create-school"
+                pathname === "/student/my-enrollments"
                   ? "text-orange-400"
                   : "text-gray-500"
               }`}
             />
             <span
               className={`text-[20px] font-medium transition-colors group-hover:text-orange-400 ${
-                pathname === "/instructor/create-school"
+                pathname === "/student/my-enrollments"
                   ? "text-orange-400"
                   : "text-zinc-500"
               }`}

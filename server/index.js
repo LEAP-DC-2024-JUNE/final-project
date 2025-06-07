@@ -8,6 +8,7 @@ import sectionRouter from "./routers/sectionRoutes.js";
 import videoRouter from "./routers/videoRoutes.js";
 import paymentRouter from "./routers/paymentRoutes.js";
 import enrollmentRouter from "./routers/enrollmentRoutes.js";
+import stripeRouter from "./routers/stripeRoutes.js";
 import { PrismaClient } from "@prisma/client";
 
 dotenv.config();
@@ -47,6 +48,7 @@ app.use("/api/sections", sectionRouter);
 app.use("/api/videos", videoRouter);
 app.use("/api/payments", paymentRouter);
 app.use("/api/enrollments", enrollmentRouter);
+app.use("/api/stripe", stripeRouter);
 
 app.get("/", async (req, res) => {
   try {

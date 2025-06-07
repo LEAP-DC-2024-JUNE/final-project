@@ -73,8 +73,8 @@ export const getAllEnrollments = async (req, res) => {
 
 // User: uurinhuu enrollmentuudaa harah
 export const getEnrollmentsByUser = async (req, res) => {
-  const { userId } = req.params;
-  //middlewariin tuslamjtai gadnaas hudal enrollment uusgehiig blockolj bn
+  const userId = req.user.id;
+
   if (req.user.role !== "ADMIN" && req.user.id !== userId) {
     return res.status(403).json({ error: "Unauthorized access" });
   }
