@@ -1,5 +1,6 @@
 "use client";
 
+import DeleteCourseCard from "@/components/Buttons/DeleteCourseCard";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Course } from "@/utils/types";
 import { motion } from "framer-motion";
@@ -7,9 +8,10 @@ import { useRouter } from "next/navigation";
 
 interface CourseCardProps {
   course: Course;
+  onRemove: (id: number) => void;
 }
 
-const CourseCard = ({ course }: CourseCardProps) => {
+const CourseCard = ({ course, onRemove }: CourseCardProps) => {
   const router = useRouter();
 
   const handleClick = () => {
@@ -21,9 +23,12 @@ const CourseCard = ({ course }: CourseCardProps) => {
       whileTap={{ scale: 0.95 }}
       className=" cursor-pointer"
     >
-      <Card className=" w-[300px] h-[300px]" onClick={handleClick}>
-        <div className=" flex flex-col justify-between items-center">
-          <CardTitle>{course.title}</CardTitle>
+      <Card className="w-[300px] h-[300px] py-0" onClick={handleClick}>
+        <div className="relative flex flex-col  items-center h-full">
+          <div className="absolute top-2 right-2 z-10">
+            <DeleteCourseCard course={course} onDelete={onRemove} />
+          </div>
+          <CardTitle className=" mt-8">{course.title}</CardTitle>
           <CardContent>
             <img
               src={course.imageUrl}

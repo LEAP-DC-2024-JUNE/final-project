@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Plus, Trash2, Check, File, Upload } from "lucide-react";
 import { useAuth } from "@clerk/nextjs";
 import { toast, Toaster } from "sonner";
+import VideoItemInput from "@/components/Buttons/VideoItemInput";
 
 interface CourseSectionProps {
   formState: any;
@@ -431,86 +432,16 @@ export default function CourseSection({
               <AccordionContent>
                 <div className="px-[150px] space-y-10">
                   {section.videos.map((video) => (
-                    <div key={video.id} className="flex gap-10 items-center">
-                      <File className="h-4 w-4 text-gray-500" />
-                      <Input
-                        placeholder="Video title"
-                        value={video.title}
-                        onChange={(e) =>
-                          updateVideoTitle(section.id, video.id, e.target.value)
-                        }
-                        className="flex-1"
-                      />
-                      <div className="relative">
-                        <Input
-                          type="file"
-                          accept="video/*"
-                          placeholder=" 100 MB per video"
-                          className="absolute inset-0 opacity-0 cursor-pointer"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              handleVideoUpload(section.id, video.id, file);
-                            }
-                          }}
-                        />
-                        <Button type="button" variant="outline" size="sm">
-                          <Upload className="h-4 w-4 mr-1 cursor-pointer" />
-                          Upload
-                        </Button>
-                      </div>
-                      {video.url && (
-                        <a
-                          href={video.url}
-                          target="_blank"
-                          className="text-orange-500 text-sm underline ml-1"
-                          rel="noreferrer"
-                        >
-                          Preview Video
-                        </a>
-                      )}
-
-                      <div className="flex gap-4 items-center">
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Check
-                            size={30}
-                            onClick={() =>
-                              saveVideoToServer(
-                                video.id,
-                                section.id,
-                                video.title,
-                                video.url || ""
-                              )
-                            }
-                            className="cursor-pointer hover:bg-zinc-400 rounded p-1"
-                          />
-                        </motion.div>
-
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Trash2
-                            size={30}
-                            onClick={() => {
-                              if (video.serverId) {
-                                deleteVideoFromServer(
-                                  video.id,
-                                  section.id,
-                                  video.title
-                                );
-                              } else {
-                                deleteVideo(section.id, video.id);
-                              }
-                            }}
-                            className="cursor-pointer hover:bg-zinc-400 rounded p-1"
-                          />
-                        </motion.div>
-                      </div>
-                    </div>
+                    <VideoItemInput
+                      key={video.id}
+                      sectionId={section.id}
+                      video={video}
+                      updateVideoTitle={updateVideoTitle}
+                      handleVideoUpload={handleVideoUpload}
+                      saveVideoToServer={saveVideoToServer}
+                      deleteVideo={deleteVideo}
+                      deleteVideoFromServer={deleteVideoFromServer}
+                    />
                   ))}
 
                   <Button

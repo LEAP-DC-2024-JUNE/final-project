@@ -14,7 +14,7 @@ export const CourseDetail = () => {
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const hasLoadedVideos = useRef(false); // Prevent re-fetch loop
+  const hasLoadedVideos = useRef(false);
 
   const router = useRouter();
   const params = useParams();
@@ -59,12 +59,7 @@ export const CourseDetail = () => {
   }, [id]);
 
   useEffect(() => {
-    if (
-      !course ||
-      !course.sections?.length ||
-      hasLoadedVideos.current // Don't re-fetch videos again
-    )
-      return;
+    if (!course || !course.sections?.length || hasLoadedVideos.current) return;
 
     const fetchVideosForAllSections = async () => {
       try {
@@ -88,7 +83,7 @@ export const CourseDetail = () => {
           })
         );
 
-        hasLoadedVideos.current = true; // Mark videos as loaded
+        hasLoadedVideos.current = true;
         setCourse((prev) =>
           prev ? { ...prev, sections: updatedSections } : prev
         );
@@ -99,6 +94,25 @@ export const CourseDetail = () => {
 
     fetchVideosForAllSections();
   }, [course, getToken]);
+
+  const handleVideoDeleted = (
+    videoId: string | number,
+    sectionId: string | number
+  ) => {
+    if (!course) return;
+
+    const updatedSections = course.sections.map((section) => {
+      if (section.id === sectionId) {
+        return {
+          ...section,
+          videos: section.videos.filter((video) => video.id !== videoId),
+        };
+      }
+      return section;
+    });
+
+    setCourse({ ...course, sections: updatedSections });
+  };
 
   const isInstructor = course?.instructor.clerkId === userId;
 
@@ -123,7 +137,10 @@ export const CourseDetail = () => {
             ) ?? 0}{" "}
             lessons
           </p>
-          <CourseAccordion sections={course.sections} />
+          <CourseAccordion
+            sections={course.sections}
+            onVideoDeleted={handleVideoDeleted}
+          />
         </div>
         <div className="w-2/3">
           <div className="bg-white shadow rounded-md p-4 border flex flex-col gap-4">
