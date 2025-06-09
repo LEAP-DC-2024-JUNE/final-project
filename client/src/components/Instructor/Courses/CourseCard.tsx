@@ -1,10 +1,10 @@
 "use client";
 
-import DeleteCourseCard from "@/components/Buttons/DeleteCourseCard";
-import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
 import { Course } from "@/utils/types";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import DeleteCourseCard from "@/components/Buttons/DeleteCourseCard";
 
 interface CourseCardProps {
   course: Course;
@@ -23,25 +23,29 @@ const CourseCard = ({ course, onRemove }: CourseCardProps) => {
       whileTap={{ scale: 0.95 }}
       className=" cursor-pointer"
     >
-      <Card className="w-[300px] h-[300px] py-0" onClick={handleClick}>
-        <div className="relative flex flex-col  items-center h-full">
+      <div
+        className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition flex flex-col bg-white w-[300px] h-[300px]"
+        onClick={handleClick}
+      >
+        <div className="relative w-full h-48">
           <div className="absolute top-2 right-2 z-10">
             <DeleteCourseCard course={course} onDelete={onRemove} />
           </div>
-          <CardTitle className=" mt-8">{course.title}</CardTitle>
-          <CardContent>
-            <img
-              src={course.imageUrl}
-              alt={course.title}
-              className="w-full h-40 object-cover rounded"
-            />
-          </CardContent>
-          <CardFooter className="flex flex-col">
-            <div>{course.description}</div>
-            <div>${course.price}</div>
-          </CardFooter>
+          <Image
+            src={course.imageUrl}
+            alt={course.title}
+            fill
+            className="object-cover"
+          />
         </div>
-      </Card>
+        <div className="flex flex-col flex-1 p-4">
+          <h2 className="text-lg font-semibold mb-1">{course.title}</h2>
+          <p className="text-gray-500 text-sm mb-4 line-clamp-1">
+            {course.description}
+          </p>
+          <p className="text-gray-600 text-sm mb-2">Price: ${course.price}</p>
+        </div>
+      </div>
     </motion.div>
   );
 };

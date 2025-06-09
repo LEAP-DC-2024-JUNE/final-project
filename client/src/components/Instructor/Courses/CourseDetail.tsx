@@ -9,11 +9,13 @@ import { CourseFooter } from "./CourseFooter";
 import { CourseAccordion } from "./CourseAccordion";
 import { useEffect, useRef, useState } from "react";
 import { BuyButton } from "@/components/BuyButton";
+import { CourseEditModal } from "./CourseEditModal";
 
 export const CourseDetail = () => {
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const hasLoadedVideos = useRef(false);
 
   const router = useRouter();
@@ -114,7 +116,13 @@ export const CourseDetail = () => {
     setCourse({ ...course, sections: updatedSections });
   };
 
-  const isInstructor = course?.instructor.clerkId === userId;
+  const handleCourseUpdated = (updated: Partial<Course>) => {
+    setCourse((prev) =>
+      prev ? { ...prev, ...updated, instructor: prev.instructor } : prev
+    );
+  };
+  console.log(course);
+  const isInstructor = course?.instructor?.clerkId === userId;
 
   if (loading) return <p className="p-4">Loading course...</p>;
   if (!course) return <p className="p-4 text-red-500">Course not found.</p>;
@@ -122,10 +130,27 @@ export const CourseDetail = () => {
 
   return (
     <div className="">
-      <div className="bg-[#eaf6f5] px-[84px] pt-8 pb-[84px] flex flex-col gap-4">
+      <div className="bg-[#eaf6f5] px-[84px] pt-8 pb-[84px] flex flex-col gap-4 relative">
         <h2 className="text-3xl font-bold">{course.title}</h2>
         <p className="text-gray-700">{course.description}</p>
+        {isInstructor && (
+          <>
+            <p
+              className="absolute top-8 right-12 z-10 cursor-pointer"
+              onClick={() => setIsEditOpen(true)}
+            >
+              Edit Course
+            </p>
+            <CourseEditModal
+              isOpen={isEditOpen}
+              onClose={() => setIsEditOpen(false)}
+              course={course}
+              onCourseUpdated={handleCourseUpdated}
+            />
+          </>
+        )}
       </div>
+
       <div className="flex flex-row justify-between gap-10 py-8 px-[84px]">
         <div className="w-full">
           <h3 className="text-2xl font-semibold mb-4">Course content</h3>
