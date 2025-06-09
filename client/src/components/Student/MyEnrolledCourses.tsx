@@ -2,13 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
+import { EnrolledCourseCard } from "./EnrolledCourseCard";
 
 interface EnrolledCourse {
   id: string;
+  enrolledAt: string;
   course: {
     id: string;
     title: string;
     price: number;
+    imageUrl: string;
   };
 }
 
@@ -53,7 +56,6 @@ const MyEnrolledCourses = () => {
     fetchEnrolledCourses();
   }, [userId, getToken]);
 
-  // UI
   if (loading) return <p className="p-4">Loading your courses...</p>;
 
   if (error) return <p className="p-4 text-red-600">{error}</p>;
@@ -63,20 +65,22 @@ const MyEnrolledCourses = () => {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">My Enrolled Courses</h1>
-      <ul className="space-y-4">
+      <h1 className="text-3xl font-bold mb-6">My Courses</h1>
+      <p className="text-gray-600 mb-8">
+        All the courses you are currently enrolled in.
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses.map((enrollment) => (
-          <li
+          <EnrolledCourseCard
             key={enrollment.id}
-            className="border p-4 rounded shadow flex flex-col"
-          >
-            <span className="text-xl font-semibold">
-              {enrollment.course.title}
-            </span>
-            <span className="text-gray-600">${enrollment.course.price}</span>
-          </li>
+            courseId={enrollment.course.id}
+            title={enrollment.course.title}
+            price={enrollment.course.price}
+            imageUrl={enrollment.course.imageUrl}
+            enrolledAt={enrollment.enrolledAt}
+          />
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

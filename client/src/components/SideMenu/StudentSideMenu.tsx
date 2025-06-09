@@ -2,14 +2,16 @@
 import { motion } from "framer-motion";
 import React from "react";
 import Link from "next/link";
-import { useClerk } from "@clerk/nextjs";
+import { SignedIn, useClerk, UserButton, useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { History, LogOut, NotebookPen } from "lucide-react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const StudentSideMenu = () => {
   const pathname = usePathname();
   const { signOut } = useClerk();
+  const { user } = useUser();
 
   const handleSignOut = async () => {
     await signOut();
@@ -17,7 +19,7 @@ const StudentSideMenu = () => {
   };
   return (
     <div className="w-[366px] min-h-screen bg-zinc-100 flex flex-col items-center justify-between fixed left-0 top-0 bottom-0 p-5">
-      <div className="flex flex-col justify-between gap-10 items-center">
+      {/* <div className="flex flex-col justify-between gap-10 items-center">
         <div className=" flex gap-1 ">
           <img src="../suraaLogo.svg" alt="logo" width={33} />
           <h1 className=" text-3xl font-extrabold ">SURAA</h1>
@@ -32,6 +34,29 @@ const StudentSideMenu = () => {
         </Avatar>
         <div>
           <p>Your username</p>
+        </div>
+      </div> */}
+      <div className="flex flex-col justify-between gap-10 items-center">
+        <div className=" flex gap-1 ">
+          <img src="../suraaLogo.svg" alt="logo" width={33} />
+          <h1 className=" text-3xl font-extrabold ">SURAA</h1>
+        </div>
+        <div>
+          <SignedIn>
+            <UserButton
+              appearance={{
+                elements: {
+                  userButtonAvatarBox: {
+                    width: "94px",
+                    height: "94px",
+                  },
+                },
+              }}
+            />
+          </SignedIn>
+        </div>
+        <div>
+          <p>{user?.primaryEmailAddress?.emailAddress || "Your Username"}</p>
         </div>
       </div>
 

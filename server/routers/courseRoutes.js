@@ -3,6 +3,7 @@ import {
   createCourse,
   deleteCourse,
   getAllCourses,
+  getCourseByEnrollment,
   getCourseById,
   getCoursesByInstructor,
   updateCourse,
@@ -25,7 +26,11 @@ courseRouter.get(
   authorizeRoles("INSTRUCTOR"),
   getCoursesByInstructor
 );
-
+courseRouter.get(
+  "/enrolled-course/:courseId",
+  authenticateUser,
+  getCourseByEnrollment
+);
 courseRouter.get("/:id", getCourseById);
 courseRouter.post(
   "/",
