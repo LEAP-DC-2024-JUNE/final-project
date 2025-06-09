@@ -9,7 +9,11 @@ import { CourseFooter } from "./CourseFooter";
 import { CourseAccordion } from "./CourseAccordion";
 import { useEffect, useRef, useState } from "react";
 import { BuyButton } from "@/components/BuyButton";
+<<<<<<< HEAD
 import { CourseEditModal } from "./CourseEditModal";
+=======
+import { Button } from "@/components/ui/button";
+>>>>>>> 887f81e (changes in da class)
 
 export const CourseDetail = () => {
   const [course, setCourse] = useState<Course | null>(null);
@@ -124,13 +128,28 @@ export const CourseDetail = () => {
   console.log(course);
   const isInstructor = course?.instructor?.clerkId === userId;
 
+  const handleGoBackButton = () => {
+    router.push("/instructor/my-schools");
+  };
+
   if (loading) return <p className="p-4">Loading course...</p>;
   if (!course) return <p className="p-4 text-red-500">Course not found.</p>;
   if (error) return <p className="p-4 text-red-600">{error}</p>;
 
   return (
     <div className="">
+<<<<<<< HEAD
       <div className="bg-[#eaf6f5] px-[84px] pt-8 pb-[84px] flex flex-col gap-4 relative">
+=======
+      <div className="bg-teal-600 px-[84px] pt-8 pb-[84px] flex flex-col gap-4">
+        <Button
+          variant="outline"
+          className=" w-[80px]  my-5"
+          onClick={handleGoBackButton}
+        >
+          Go Back
+        </Button>
+>>>>>>> 887f81e (changes in da class)
         <h2 className="text-3xl font-bold">{course.title}</h2>
         <p className="text-gray-700">{course.description}</p>
         {isInstructor && (
