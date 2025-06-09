@@ -10,6 +10,9 @@ const MyCourses = () => {
   const [loading, setLoading] = useState(true);
 
   const { getToken } = useAuth();
+  const handleRemoveCourse = (id: number) => {
+    setCourses((prev) => prev.filter((course: any) => course.id !== id));
+  };
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -53,7 +56,11 @@ const MyCourses = () => {
           <div className="py-10 flex flex-row items-center gap-10 flex-wrap">
             {courses.length > 0 ? (
               courses.map((course, index) => (
-                <CourseCard key={index} course={course} />
+                <CourseCard
+                  key={index}
+                  course={course}
+                  onRemove={handleRemoveCourse}
+                />
               ))
             ) : (
               <p>No courses found.</p>

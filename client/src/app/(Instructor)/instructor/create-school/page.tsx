@@ -1,9 +1,8 @@
-import CreateSchoolPage from "@/components/Instructor/Create-Course/CreateSCourse";
-
+import CreateCoursePage from "@/components/Instructor/Create-Course/CreateCourse";
 const CreateSchool = () => {
   return (
     <div>
-      <CreateSchoolPage />
+      <CreateCoursePage />
     </div>
   );
 };
