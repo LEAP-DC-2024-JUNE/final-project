@@ -18,6 +18,39 @@ export const getAllCourses = async (req, res) => {
   }
 };
 
+export const getCourseByEnrollment = async (req, res) => {
+  const userId = req.user.id;
+  const { courseId } = req.params;
+  console.log(courseId);
+
+  const enrollment = await prisma.enrollment.findFirst({
+    where: { userId, courseId },
+  });
+
+  if (!enrollment) {
+    return res
+      .status(403)
+      .json({ error: "You are not enrolled in this course" });
+  }
+
+  const course = await prisma.course.findUnique({
+    where: { id: courseId },
+    include: {
+      sections: {
+        include: {
+          videos: true,
+        },
+      },
+    },
+  });
+
+  if (!course) {
+    return res.status(404).json({ error: "Course not found" });
+  }
+
+  res.status(200).json(course);
+};
+
 export const getCourseById = async (req, res) => {
   const { id } = req.params;
   try {
