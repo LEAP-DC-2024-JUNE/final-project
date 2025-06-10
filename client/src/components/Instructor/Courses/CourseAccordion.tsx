@@ -19,11 +19,13 @@ type CourseAccordionProps = {
     videoId: string | number,
     sectionId: string | number
   ) => void;
+  isInstructor?: boolean;
 };
 
 export const CourseAccordion = ({
   sections,
   onVideoDeleted,
+  isInstructor,
 }: CourseAccordionProps) => {
   const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
   const [localSections, setLocalSections] = useState<Section[]>(sections);
@@ -81,36 +83,44 @@ export const CourseAccordion = ({
                       <span className="text-lg">
                         {idx + 1}. {video.title}
                       </span>
-                      {video.url && (
-                        <a
-                          href={video.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-orange-600 hover:underline ml-4 text-xs"
-                        >
-                          Preview
-                        </a>
+                      {isInstructor ? (
+                        video.url && (
+                          <a
+                            href={video.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-orange-600 hover:underline ml-4 text-xs"
+                          >
+                            Preview
+                          </a>
+                        )
+                      ) : (
+                        <span className="ml-4 text-xs text-gray-500 italic">
+                          Purchase this course to access the lesson
+                        </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-2">
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <Edit2Icon
-                          size={24}
-                          onClick={() => handleEditClick(video.id)}
-                          className="cursor-pointer hover:bg-zinc-100 hover:text-zinc-600 rounded p-1 text-gray-500"
+                    {isInstructor && (
+                      <div className="flex items-center gap-2">
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Edit2Icon
+                            size={24}
+                            onClick={() => handleEditClick(video.id)}
+                            className="cursor-pointer hover:bg-zinc-100 hover:text-zinc-600 rounded p-1 text-gray-500"
+                          />
+                        </motion.div>
+                        <DeleteButton
+                          videoId={video.id}
+                          videoTitle={video.title}
+                          onDeleteSuccess={() => {
+                            onVideoDeleted?.(video.id, section.id);
+                          }}
                         />
-                      </motion.div>
-                      <DeleteButton
-                        videoId={video.id}
-                        videoTitle={video.title}
-                        onDeleteSuccess={() => {
-                          onVideoDeleted?.(video.id, section.id);
-                        }}
-                      />
-                    </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

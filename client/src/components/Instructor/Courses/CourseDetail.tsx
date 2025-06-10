@@ -20,12 +20,12 @@ export const CourseDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const hasLoadedVideos = useRef(false);
 
   const router = useRouter();
   const params = useParams();
   const id = params.id;
   const { getToken, userId } = useAuth();
+  const hasLoadedVideos = useRef(false);
 
   useEffect(() => {
     if (!id) return;
@@ -64,42 +64,42 @@ export const CourseDetail = () => {
     fetchCourse();
   }, [id]);
 
-  useEffect(() => {
-    if (!course || !course.sections?.length || hasLoadedVideos.current) return;
+  // useEffect(() => {
+  //   if (!course || !course.sections?.length || hasLoadedVideos.current) return;
 
-    const fetchVideosForAllSections = async () => {
-      try {
-        const token = await getToken({ template: "suraa" });
+  //   const fetchVideosForAllSections = async () => {
+  //     try {
+  //       const token = await getToken({ template: "suraa" });
 
-        const updatedSections = await Promise.all(
-          course.sections.map(async (section) => {
-            const res = await fetch(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/videos/section/${section.id}`,
-              {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
+  //       const updatedSections = await Promise.all(
+  //         course.sections.map(async (section) => {
+  //           const res = await fetch(
+  //             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/videos/section/${section.id}`,
+  //             {
+  //               method: "GET",
+  //               headers: {
+  //                 "Content-Type": "application/json",
+  //                 Authorization: `Bearer ${token}`,
+  //               },
+  //             }
+  //           );
 
-            const videos = res.ok ? await res.json() : [];
-            return { ...section, videos };
-          })
-        );
+  //           const videos = res.ok ? await res.json() : [];
+  //           return { ...section, videos };
+  //         })
+  //       );
 
-        hasLoadedVideos.current = true;
-        setCourse((prev) =>
-          prev ? { ...prev, sections: updatedSections } : prev
-        );
-      } catch (err) {
-        console.error("Error fetching videos by section:", err);
-      }
-    };
+  //       hasLoadedVideos.current = true;
+  //       setCourse((prev) =>
+  //         prev ? { ...prev, sections: updatedSections } : prev
+  //       );
+  //     } catch (err) {
+  //       console.error("Error fetching videos by section:", err);
+  //     }
+  //   };
 
-    fetchVideosForAllSections();
-  }, [course, getToken]);
+  //   fetchVideosForAllSections();
+  // }, [course, getToken]);
 
   const handleVideoDeleted = (
     videoId: string | number,
@@ -125,7 +125,7 @@ export const CourseDetail = () => {
       prev ? { ...prev, ...updated, instructor: prev.instructor } : prev
     );
   };
-  console.log(course);
+
   const isInstructor = course?.instructor?.clerkId === userId;
 
   const handleGoBackButton = () => {
@@ -154,12 +154,12 @@ export const CourseDetail = () => {
         <p className="text-gray-700">{course.description}</p>
         {isInstructor && (
           <>
-            <p
-              className="absolute top-8 right-12 z-10 cursor-pointer"
+            <button
+              className="absolute top-8 right-[84px] z-10 text-blue-600 border rounded-lg p-2 bg-white"
               onClick={() => setIsEditOpen(true)}
             >
               Edit Course
-            </p>
+            </button>
             <CourseEditModal
               isOpen={isEditOpen}
               onClose={() => setIsEditOpen(false)}
@@ -176,14 +176,15 @@ export const CourseDetail = () => {
           <p className="text-sm mb-4 text-gray-600">
             {course.sections?.length ?? 0} sections |{" "}
             {course.sections?.reduce(
-              (acc, section) => acc + section.videos.length,
+              (acc, section) => acc + (section.videos?.length ?? 0),
               0
-            ) ?? 0}{" "}
+            ) ?? 0}
             lessons
           </p>
           <CourseAccordion
             sections={course.sections}
             onVideoDeleted={handleVideoDeleted}
+            isInstructor={isInstructor}
           />
         </div>
         <div className="w-2/3">
@@ -194,6 +195,7 @@ export const CourseDetail = () => {
                 alt={course.title}
                 fill
                 className="object-cover"
+                loading="lazy"
               />
             </div>
             <div className="border border-black rounded-md px-4 py-4 flex items-center gap-3">
