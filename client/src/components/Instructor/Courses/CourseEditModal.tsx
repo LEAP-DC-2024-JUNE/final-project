@@ -3,6 +3,7 @@
 import FileUpload from "../Create-Course/FileUpload";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Course } from "@/utils/types";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/nextjs";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,7 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Course } from "@/utils/types";
 
 interface EditCourseModalProps {
   isOpen: boolean;
@@ -132,14 +132,10 @@ export const CourseEditModal = ({
 
           <div className="grid gap-2">
             <Label>Course Image *</Label>
-            {/* {formState.imageUrl && (
-              <img
-                src={formState.imageUrl}
-                alt="Course"
-                className="w-full h-40 object-cover rounded-md border"
-              />
-            )} */}
-            <FileUpload setFormState={setFormState} />
+            <FileUpload
+              setFormState={setFormState}
+              initialImageUrl={formState.imageUrl}
+            />
           </div>
 
           <div className="flex justify-end gap-2 mt-4">

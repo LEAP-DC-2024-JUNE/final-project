@@ -6,6 +6,7 @@ export const PreviewImage = ({
   imagePreviewUrl,
   resetFileInput,
   isUploading,
+  onClick,
 }: any) => {
   return (
     <div className="relative">
@@ -17,6 +18,7 @@ export const PreviewImage = ({
           width={446}
           objectFit="cover"
           className="rounded-md"
+          onClick={onClick}
         />
       </div>
 

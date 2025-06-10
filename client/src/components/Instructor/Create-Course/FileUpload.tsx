@@ -7,11 +7,14 @@ import { DragAndDropField } from "./DragandDropField";
 
 interface FileUploadProps {
   setFormState: React.Dispatch<React.SetStateAction<any>>;
+  initialImageUrl?: string | null;
 }
 
-const FileUpload = ({ setFormState }: FileUploadProps) => {
+const FileUpload = ({ setFormState, initialImageUrl }: FileUploadProps) => {
   const fileInputElementRef = useRef<HTMLInputElement>(null);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(
+    initialImageUrl || null
+  );
   const [isUploading, setIsUploading] = useState(false);
 
   const CLOUD_NAME = "dd3imxxlm";
@@ -145,6 +148,7 @@ const FileUpload = ({ setFormState }: FileUploadProps) => {
           imagePreviewUrl={imagePreviewUrl}
           resetFileInput={resetFileInput}
           isUploading={isUploading}
+          onClick={triggerFileInputClick}
         />
       ) : (
         <DragAndDropField
