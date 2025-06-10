@@ -441,6 +441,12 @@ export default function CourseSection({
                       saveVideoToServer={saveVideoToServer}
                       deleteVideo={deleteVideo}
                       deleteVideoFromServer={deleteVideoFromServer}
+                      allSectionsComplete={
+                        sections.every((section) => section.serverId) &&
+                        sections.every((section) =>
+                          section.videos.every((video) => video.url)
+                        )
+                      }
                     />
                   ))}
 
@@ -461,6 +467,22 @@ export default function CourseSection({
         </Accordion>
       </div>
       <Toaster position="top-right" />
+      {/* Go back to courses button */}
+      <div className="flex justify-center mt-8 pt-4 border-t">
+        <Button
+          onClick={() => window.history.back()}
+          disabled={
+            sections.length === 0 ||
+            !sections.every((section) => section.serverId) ||
+            !sections.every((section) =>
+              section.videos.every((video) => video.url && video.serverId)
+            )
+          }
+          className="px-8 py-2 cursor-pointer"
+        >
+          Section is created - Go back to courses
+        </Button>
+      </div>
     </div>
   );
 }

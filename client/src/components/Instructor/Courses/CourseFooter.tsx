@@ -4,7 +4,7 @@ export const CourseFooter = () => {
       <div className="flex flex-row justify-between">
         <div className="flex flex-col gap-10">
           <p className="text-white text-2xl">© 2025 Instructor's Course</p>
-          <span className=" bg-teal-600 rounded-md border border-green-400 p-3 text-white text-xl w-[180px]">
+          <span className=" bg-teal-600 rounded-md border border-green-600 p-3 text-white text-xl w-[180px]">
             Built with <span className="text-teal-300">SURAA</span>
           </span>
         </div>

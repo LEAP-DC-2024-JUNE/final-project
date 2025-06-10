@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { File, Upload, Check, Trash2 } from "lucide-react";
 import * as motion from "motion/react-client";
-import React from "react";
+import type React from "react";
 
 type VideoItemProps = {
   sectionId: number;
@@ -31,6 +31,8 @@ type VideoItemProps = {
     sectionId: number,
     title: string
   ) => void;
+
+  allSectionsComplete?: boolean;
 };
 
 const VideoItemInput: React.FC<VideoItemProps> = ({
@@ -41,6 +43,7 @@ const VideoItemInput: React.FC<VideoItemProps> = ({
   saveVideoToServer,
   deleteVideo,
   deleteVideoFromServer,
+  allSectionsComplete = false,
 }) => {
   return (
     <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -84,15 +87,24 @@ const VideoItemInput: React.FC<VideoItemProps> = ({
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Check
             size={30}
-            onClick={() =>
-              saveVideoToServer(
-                video.id,
-                sectionId,
-                video.title,
-                video.url || ""
-              )
-            }
-            className="cursor-pointer hover:bg-zinc-400 rounded p-1"
+            onClick={() => {
+              if (allSectionsComplete) {
+                saveVideoToServer(
+                  video.id,
+                  sectionId,
+                  video.title,
+                  video.url || ""
+                );
+              }
+            }}
+            className={`cursor-pointer rounded p-1 ${
+              allSectionsComplete
+                ? "hover:bg-zinc-400 text-green-600"
+                : "text-gray-400 cursor-not-allowed"
+            }`}
+            style={{
+              opacity: allSectionsComplete ? 1 : 0.5,
+            }}
           />
         </motion.div>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>

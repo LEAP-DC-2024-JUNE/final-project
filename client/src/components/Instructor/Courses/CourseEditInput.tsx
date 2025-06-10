@@ -2,10 +2,10 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { File, Upload, Check, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import * as motion from "motion/react-client";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 
 type Props = {
   videoId: string;
@@ -27,6 +27,9 @@ const CourseEditInput = ({
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoUrl, setVideoUrl] = useState(initialUrl);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const hasChanges = title !== initialTitle || videoFile !== null;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -38,11 +41,19 @@ const CourseEditInput = ({
   };
 
   const handleSave = async () => {
+    if (!hasChanges) {
+      toast.info("No changes to save");
+      return;
+    }
+
     try {
       setIsSaving(true);
 
       let uploadedUrl = videoUrl;
+
       if (videoFile) {
+        setIsUploading(true);
+
         const formData = new FormData();
         formData.append("file", videoFile);
         formData.append("upload_preset", "leapdc-preset");
@@ -56,6 +67,8 @@ const CourseEditInput = ({
         );
         const data = await res.json();
         uploadedUrl = data.secure_url;
+
+        setIsUploading(false);
       }
 
       const token = await getToken();
@@ -81,8 +94,10 @@ const CourseEditInput = ({
       toast.success("Section updated successfully");
     } catch (err) {
       console.error("Failed to save:", err);
+      toast.error("Failed to save changes");
     } finally {
       setIsSaving(false);
+      setVideoFile(null); // Clear uploaded file after saving
     }
   };
 
@@ -94,6 +109,7 @@ const CourseEditInput = ({
         onChange={(e) => setTitle(e.target.value)}
         className="flex-1"
       />
+
       <div className="relative">
         <Input
           type="file"
@@ -101,11 +117,12 @@ const CourseEditInput = ({
           onChange={handleFileChange}
           className="absolute inset-0 opacity-0 cursor-pointer"
         />
-        <Button type="button" variant="outline" size="sm">
+        <Button type="button" variant="outline" size="sm" disabled={isSaving}>
           <Upload className="h-4 w-4 mr-1" />
-          Upload
+          {isUploading ? "Uploading..." : "Upload"}
         </Button>
       </div>
+
       {videoUrl && (
         <a
           href={videoUrl}
@@ -116,14 +133,22 @@ const CourseEditInput = ({
           Preview Video
         </a>
       )}
+
       <div className="flex gap-4 items-center">
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Check
-            size={30}
+          <button
             onClick={handleSave}
-            className="cursor-pointer hover:bg-zinc-400 rounded p-1"
-          />
+            disabled={isSaving || !hasChanges}
+            className={`p-1 rounded ${
+              isSaving || !hasChanges
+                ? "text-gray-400 cursor-not-allowed"
+                : "hover:bg-zinc-400"
+            }`}
+          >
+            <Check size={24} />
+          </button>
         </motion.div>
+
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Trash2
             size={30}
