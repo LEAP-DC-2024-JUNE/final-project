@@ -49,7 +49,7 @@ const MyCourses = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <p className="font-medium">Courses I own:</p>
+        <p className="font-medium text-2xl">Courses I own:</p>
         {loading ? (
           <p className="mt-10">Loading courses...</p>
         ) : (
