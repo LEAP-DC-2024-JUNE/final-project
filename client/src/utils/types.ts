@@ -27,3 +27,25 @@ export interface User {
   email: string;
   phoneNumber: string;
 }
+
+export interface EnrollmentTableProps {
+  payments: Payment[];
+}
+
+export interface Payment {
+  id: string;
+  amount: number;
+  stripeId: string;
+  createdAt: string;
+  course: {
+    id: string;
+    title: string;
+  };
+  instructorName?: string;
+  card?: {
+    brand: string;
+    last4: string;
+    expMonth: number;
+    expYear: number;
+  } | null;
+}

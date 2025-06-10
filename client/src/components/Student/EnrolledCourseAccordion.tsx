@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Section } from "@/utils/types";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 interface EnrolledCourseAccordionProps {
   sections: Section[];
@@ -53,6 +55,13 @@ export const EnrolledCourseAccordion = ({
           )}
         </div>
       ))}
+      <Link
+        href="/student/dashboard"
+        className="inline-flex items-center gap-2 px-4 py-2 mt-4 text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 rounded-md transition"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Go to my dashboard
+      </Link>
     </div>
   );
 };
