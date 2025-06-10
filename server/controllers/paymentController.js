@@ -160,23 +160,28 @@ export const getPaymentsByUser = async (req, res) => {
         },
       },
     });
-    console.log(payments);
 
     // Enrich each payment with Stripe card info
     const enrichedPayments = await Promise.all(
       payments.map(async (payment) => {
         try {
           const session = await stripe.checkout.sessions.retrieve(
-            payment.stripeId,
-            {
-              expand: ["payment_intent"],
-            }
+            payment.stripeId
           );
 
-          const paymentIntent = session.payment_intent;
-          const charge = paymentIntent?.charges?.data?.[0];
-          const paymentMethodDetails = charge?.payment_method_details?.card;
+          const paymentIntent = await stripe.paymentIntents.retrieve(
+            session.payment_intent
+          );
 
+          let paymentMethodDetails = null;
+
+          if (paymentIntent.latest_charge) {
+            const charge = await stripe.charges.retrieve(
+              paymentIntent.latest_charge
+            );
+
+            paymentMethodDetails = charge?.payment_method_details?.card;
+          }
           return {
             id: payment.id,
             amount: payment.amount,
@@ -187,7 +192,7 @@ export const getPaymentsByUser = async (req, res) => {
               title: payment.course.title,
             },
             instructorName: payment.course.instructor
-              ? `${payment.course.instructor.email} ${payment.course.instructor.phoneNumber}`
+              ? `${payment.course.instructor.email} `
               : "Unknown",
             card: paymentMethodDetails
               ? {
@@ -223,9 +228,7 @@ export const getPaymentsByUser = async (req, res) => {
       })
     );
 
-    // Return enriched data
     res.status(200).json(enrichedPayments);
-    console.log(enrichedPayments);
   } catch (error) {
     console.error("Error fetching user payments:", error);
     res.status(500).json({ error: "Internal server error" });

@@ -37,6 +37,25 @@ export const createCheckoutSession = async (req, res) => {
   }
 };
 
+// export const getStripeSession = async (req, res) => {
+//   const sessionId = req.query.session_id;
+
+//   if (!sessionId) {
+//     return res.status(400).json({ error: "Missing session_id" });
+//   }
+
+//   try {
+//     const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+//     res.status(200).json({
+//       amount_total: session.amount_total,
+//     });
+//   } catch (error) {
+//     console.error("Stripe session error:", error);
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
 export const getStripeSession = async (req, res) => {
   const sessionId = req.query.session_id;
 
@@ -45,10 +64,25 @@ export const getStripeSession = async (req, res) => {
   }
 
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ["payment_intent.charges"],
+    });
+
+    const paymentIntent = session.payment_intent;
+    const charge = paymentIntent?.charges?.data?.[0];
+    const paymentMethodDetails = charge?.payment_method_details?.card;
+    console.log(paymentMethodDetails);
 
     res.status(200).json({
       amount_total: session.amount_total,
+      card: paymentMethodDetails
+        ? {
+            brand: paymentMethodDetails.brand,
+            last4: paymentMethodDetails.last4,
+            expMonth: paymentMethodDetails.exp_month,
+            expYear: paymentMethodDetails.exp_year,
+          }
+        : null,
     });
   } catch (error) {
     console.error("Stripe session error:", error);

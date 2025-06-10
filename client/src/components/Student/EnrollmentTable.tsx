@@ -1,30 +1,12 @@
 "use client";
 
-interface EnrollmentTableProps {
-  payments: {
-    id: string;
-    amount: number;
-    stripeId: string;
-    createdAt: string;
-    course: {
-      id: string;
-      title: string;
-    };
-    instructorName?: string;
-    card?: {
-      brand: string;
-      last4: string;
-      expMonth: number;
-      expYear: number;
-    } | null;
-  }[];
-}
+import { EnrollmentTableProps } from "@/utils/types";
 
 export const EnrollmentTable = ({ payments }: EnrollmentTableProps) => {
   return (
-    <div className="overflow-x-auto border rounded-md">
+    <div className="overflow-x-auto border rounded-lg shadow-sm">
       <table className="min-w-full text-sm text-left">
-        <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
+        <thead className="bg-gray-100 text-gray-700 uppercase text-xs tracking-wider">
           <tr>
             <th className="px-6 py-3">Course</th>
             <th className="px-6 py-3">Instructor</th>
@@ -33,27 +15,43 @@ export const EnrollmentTable = ({ payments }: EnrollmentTableProps) => {
             <th className="px-6 py-3">Enrolled Date</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200">
+        <tbody className="divide-y divide-gray-200 text-gray-800">
           {payments.map((payment) => (
-            <tr key={payment.id}>
-              <td className="px-6 py-4 text-teal-700 font-medium">
+            <tr
+              key={payment.id}
+              className="hover:bg-gray-50 transition-colors duration-200"
+            >
+              <td className="px-6 py-4 font-medium text-teal-700">
                 {payment.course.title}
               </td>
               <td className="px-6 py-4">
-                {payment.instructorName || "Unknown"}
+                {payment.instructorName || (
+                  <span className="text-gray-400">Unknown</span>
+                )}
               </td>
-              <td className="px-6 py-4">
+              <td className="px-6 py-4 font-semibold text-green-700">
                 ${(payment.amount / 100).toFixed(2)}
               </td>
               <td className="px-6 py-4">
-                {payment.card
-                  ? `${payment.card.brand.toUpperCase()} **** ${
-                      payment.card.last4
-                    } (exp ${payment.card.expMonth}/${payment.card.expYear})`
-                  : "Unknown"}
+                {payment.card ? (
+                  <div>
+                    <div className="font-medium uppercase">
+                      {payment.card.brand} **** {payment.card.last4}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      Exp: {payment.card.expMonth}/{payment.card.expYear}
+                    </div>
+                  </div>
+                ) : (
+                  <span className="text-gray-400">Unknown</span>
+                )}
               </td>
               <td className="px-6 py-4">
-                {new Date(payment.createdAt).toLocaleDateString()}
+                {new Date(payment.createdAt).toLocaleDateString(undefined, {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
               </td>
             </tr>
           ))}

@@ -3,24 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { EnrollmentTable } from "@/components/Student/EnrollmentTable";
-
-interface Payment {
-  id: string;
-  amount: number;
-  stripeId: string;
-  createdAt: string;
-  course: {
-    id: string;
-    title: string;
-  };
-  instructorName?: string;
-  card?: {
-    brand: string;
-    last4: string;
-    expMonth: number;
-    expYear: number;
-  } | null;
-}
+import { Payment } from "@/utils/types";
 
 const MyEnrollmentsPage = () => {
   const { getToken, userId } = useAuth();

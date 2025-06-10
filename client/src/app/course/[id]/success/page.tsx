@@ -44,7 +44,8 @@ const SuccessPage = () => {
 
         const stripeSession = await stripeSessionRes.json();
 
-        const amount = stripeSession.amount_total;
+        const amount = stripeSession.amount_total / 100;
+        console.log(stripeSession);
         if (!amount) throw new Error("Missing amount_total in Stripe session");
 
         const enrollRes = await fetch(
