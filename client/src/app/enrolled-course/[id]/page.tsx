@@ -61,7 +61,7 @@ const EnrolledCoursePage = () => {
 
   return (
     <div className="p-8 flex flex-col gap-20">
-      <div className="flex gap-20">
+      <div className="flex gap-20 items-center">
         <img
           src={course.imageUrl}
           alt="courseImage"

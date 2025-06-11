@@ -28,6 +28,8 @@ export function CreateCourseModal1({ isOpen, onClose, onCourseCreated }: any) {
     price: "",
     imageUrl: "",
   });
+  const [isGenerating, setIsGenerating] = useState(false);
+
   const { getToken } = useAuth();
 
   const updateFormField = (field: keyof CourseFormState, value: any) => {
@@ -78,6 +80,35 @@ export function CreateCourseModal1({ isOpen, onClose, onCourseCreated }: any) {
     }
   };
 
+  const handleGenerate = async (courseTitle: string) => {
+    try {
+      setIsGenerating(true);
+      const response = await fetch("http://localhost:3000/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: courseTitle,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to generate description");
+
+      const data = await response.json();
+
+      setFormState((prev) => ({
+        ...prev,
+        description: data.generatedResponse,
+      }));
+    } catch (error: any) {
+      console.error("Error generating description:", error);
+      alert(error.message || "Something went wrong");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[600px] max-h-[80vh] overflow-y-auto">
@@ -98,11 +129,15 @@ export function CreateCourseModal1({ isOpen, onClose, onCourseCreated }: any) {
               disabled={isLoading}
             />
           </div>
+          <Button
+            onClick={() => handleGenerate(formState.title)}
+            className="bg-green-800"
+            disabled={isGenerating || isLoading}
+          >
+            {isGenerating ? "Generating..." : "Generate description with AI"}
+          </Button>
 
           <div className="grid gap-2">
-            <Button className=" text-green-800">
-              Generate description with AI
-            </Button>
             <Label htmlFor="courseDescription">Course Description *</Label>
             <Textarea
               id="courseDescription"

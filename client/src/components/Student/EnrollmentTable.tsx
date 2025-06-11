@@ -30,7 +30,7 @@ export const EnrollmentTable = ({ payments }: EnrollmentTableProps) => {
                 )}
               </td>
               <td className="px-6 py-4 font-semibold text-green-700">
-                ${(payment.amount / 100).toFixed(2)}
+                ${payment.amount.toFixed(2)}
               </td>
               <td className="px-6 py-4">
                 {payment.card ? (
