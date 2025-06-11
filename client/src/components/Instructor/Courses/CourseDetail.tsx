@@ -11,12 +11,15 @@ import { useEffect, useRef, useState } from "react";
 import { BuyButton } from "@/components/BuyButton";
 import { CourseEditModal } from "./CourseEditModal";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { AddSectionModal } from "./AddSectionModal";
 
 export const CourseDetail = () => {
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
 
   const router = useRouter();
   const params = useParams();
@@ -61,42 +64,52 @@ export const CourseDetail = () => {
     fetchCourse();
   }, [id]);
 
-  // useEffect(() => {
-  //   if (!course || !course.sections?.length || hasLoadedVideos.current) return;
+  const addSection = async (sectionName: string) => {
+    if (!sectionName.trim()) return;
 
-  //   const fetchVideosForAllSections = async () => {
-  //     try {
-  //       const token = await getToken({ template: "suraa" });
+    try {
+      const token = await getToken({ template: "suraa" });
 
-  //       const updatedSections = await Promise.all(
-  //         course.sections.map(async (section) => {
-  //           const res = await fetch(
-  //             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/videos/section/${section.id}`,
-  //             {
-  //               method: "GET",
-  //               headers: {
-  //                 "Content-Type": "application/json",
-  //                 Authorization: `Bearer ${token}`,
-  //               },
-  //             }
-  //           );
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/${course?.id}/sections`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            name: sectionName,
+            courseId: course?.id,
+          }),
+        }
+      );
+      console.log("Adding section:", {
+        name: sectionName,
+        courseId: course?.id,
+      });
 
-  //           const videos = res.ok ? await res.json() : [];
-  //           return { ...section, videos };
-  //         })
-  //       );
+      if (!res.ok) {
+        throw new Error("Failed to add section");
+      }
 
-  //       hasLoadedVideos.current = true;
-  //       setCourse((prev) =>
-  //         prev ? { ...prev, sections: updatedSections } : prev
-  //       );
-  //     } catch (err) {
-  //       console.error("Error fetching videos by section:", err);
-  //     }
-  //   };
+      const newSection = await res.json();
 
-  //   fetchVideosForAllSections();
-  // }, [course, getToken]);
+      setCourse((prev) =>
+        prev
+          ? {
+              ...prev,
+              sections: [...prev.sections, { ...newSection, videos: [] }],
+            }
+          : prev
+      );
+
+      toast.success("Section added!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add section.");
+    }
+  };
 
   const handleVideoDeleted = (
     videoId: string | number,
@@ -129,27 +142,31 @@ export const CourseDetail = () => {
     router.push("/instructor/my-schools");
   };
 
-  if (loading) return <p className="p-4">Loading course...</p>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-screen w-full">
+        <p className="text-lg font-medium">Loading course...</p>
+      </div>
+    );
   if (!course) return <p className="p-4 text-red-500">Course not found.</p>;
   if (error) return <p className="p-4 text-red-600">{error}</p>;
 
   return (
     <div className="">
-      <div className="bg-[#eaf6f5] px-[84px] pt-8 pb-[84px] flex flex-col gap-4 relative">
-        <Button
-          variant="outline"
-          className=" w-[80px]  my-5"
+      <div className="bg-teal-100 px-[84px] pt-8 pb-[84px] flex flex-col gap-4 relative">
+        <button
+          className="border rounded-lg text-black bg-teal-100 p-2 w-[80px] cursor-pointer"
           onClick={handleGoBackButton}
         >
           Go Back
-        </Button>
+        </button>
 
         <h2 className="text-3xl font-bold">{course.title}</h2>
-        <p className="text-gray-700">{course.description}</p>
+        <p className="text-gray-700 italic">{course.description}</p>
         {isInstructor && (
           <>
             <button
-              className="absolute top-8 right-[84px] z-10 text-blue-600 border rounded-lg p-2 bg-white"
+              className="absolute top-8 right-[84px] z-10 text-black border rounded-lg p-2 bg-teal-100 cursor-pointer"
               onClick={() => setIsEditOpen(true)}
             >
               Edit Course
@@ -174,10 +191,26 @@ export const CourseDetail = () => {
             ) ?? 0}
             lessons
           </p>
+
           <CourseAccordion
             sections={course.sections}
             onVideoDeleted={handleVideoDeleted}
             isInstructor={isInstructor}
+          />
+          {isInstructor && (
+            <div className="mt-4 ml-4">
+              <button
+                className="hover:underline text-blue-600"
+                onClick={() => setIsAddSectionOpen(true)}
+              >
+                + Add Section
+              </button>
+            </div>
+          )}
+          <AddSectionModal
+            isOpen={isAddSectionOpen}
+            onClose={() => setIsAddSectionOpen(false)}
+            onAddSection={addSection}
           />
         </div>
         <div className="w-2/3">
@@ -195,8 +228,37 @@ export const CourseDetail = () => {
               <span className="text-xl font-semibold">${course.price}</span>
               <span className="text-sm text-gray-500">One-time purchase</span>
             </div>
-            {isInstructor ? (
+            {/* {isInstructor ? (
               <p>You are instructor of this course</p>
+            ) : (
+              <BuyButton
+                courseId={course.id}
+                title={course.title}
+                amount={course.price}
+              />
+            )} */}
+            {isInstructor ? (
+              <div className="flex flex-col gap-2">
+                <p className="text-lg font-bold">
+                  Share this link to sell your course:
+                </p>
+                <div className="flex items-center border rounded-md p-2 bg-gray-100">
+                  <span className="truncate text-sm">
+                    {`${process.env.NEXT_PUBLIC_APP_URL}/course/${course.id}`}
+                  </span>
+                  <Button
+                    size="sm"
+                    className="ml-2"
+                    onClick={() => {
+                      const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL}/course/${course.id}`;
+                      navigator.clipboard.writeText(shareUrl);
+                      toast.success("Link copied to clipboard!");
+                    }}
+                  >
+                    Copy
+                  </Button>
+                </div>
+              </div>
             ) : (
               <BuyButton
                 courseId={course.id}
