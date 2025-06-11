@@ -153,20 +153,20 @@ export const CourseDetail = () => {
 
   return (
     <div className="">
-      <div className="bg-teal-100 px-[84px] pt-8 pb-[84px] flex flex-col gap-4 relative">
+      <div className="bg-teal-500 px-[84px] pt-8 pb-[84px] flex flex-col gap-4 relative">
         <button
-          className="border rounded-lg text-black bg-teal-100 p-2 w-[80px] cursor-pointer"
+          className="border rounded-lg text-black bg-teal-100 p-2 w-[100px] cursor-pointer hover:bg-teal-200 text-sm"
           onClick={handleGoBackButton}
         >
-          Go Back
+          ← Go Back
         </button>
 
         <h2 className="text-3xl font-bold">{course.title}</h2>
-        <p className="text-gray-700 italic">{course.description}</p>
+        <p className="text-gray-900 italic">{course.description}</p>
         {isInstructor && (
           <>
             <button
-              className="absolute top-8 right-[84px] z-10 text-black border rounded-lg p-2 bg-teal-100 cursor-pointer"
+              className="absolute top-8 right-[84px] z-10 text-black border rounded-lg p-2 bg-teal-100 cursor-pointer  hover:bg-teal-200 text-sm"
               onClick={() => setIsEditOpen(true)}
             >
               Edit Course
