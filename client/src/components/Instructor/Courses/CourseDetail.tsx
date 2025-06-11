@@ -136,15 +136,14 @@ export const CourseDetail = () => {
   return (
     <div className="">
       <div className="bg-[#eaf6f5] px-[84px] pt-8 pb-[84px] flex flex-col gap-4 relative">
-        <div className="bg-teal-600 px-[84px] pt-8 pb-[84px] flex flex-col gap-4 relative">
-          <Button
-            variant="outline"
-            className=" w-[80px]  my-5"
-            onClick={handleGoBackButton}
-          >
-            Go Back
-          </Button>
-        </div>
+        <Button
+          variant="outline"
+          className=" w-[80px]  my-5"
+          onClick={handleGoBackButton}
+        >
+          Go Back
+        </Button>
+
         <h2 className="text-3xl font-bold">{course.title}</h2>
         <p className="text-gray-700">{course.description}</p>
         {isInstructor && (

@@ -100,6 +100,9 @@ export function CreateCourseModal1({ isOpen, onClose, onCourseCreated }: any) {
           </div>
 
           <div className="grid gap-2">
+            <Button className=" text-green-800">
+              Generate description with AI
+            </Button>
             <Label htmlFor="courseDescription">Course Description *</Label>
             <Textarea
               id="courseDescription"
