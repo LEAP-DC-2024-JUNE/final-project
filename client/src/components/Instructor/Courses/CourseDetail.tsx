@@ -9,11 +9,8 @@ import { CourseFooter } from "./CourseFooter";
 import { CourseAccordion } from "./CourseAccordion";
 import { useEffect, useRef, useState } from "react";
 import { BuyButton } from "@/components/BuyButton";
-<<<<<<< HEAD
 import { CourseEditModal } from "./CourseEditModal";
-=======
 import { Button } from "@/components/ui/button";
->>>>>>> 887f81e (changes in da class)
 
 export const CourseDetail = () => {
   const [course, setCourse] = useState<Course | null>(null);
@@ -138,18 +135,16 @@ export const CourseDetail = () => {
 
   return (
     <div className="">
-<<<<<<< HEAD
       <div className="bg-[#eaf6f5] px-[84px] pt-8 pb-[84px] flex flex-col gap-4 relative">
-=======
-      <div className="bg-teal-600 px-[84px] pt-8 pb-[84px] flex flex-col gap-4">
-        <Button
-          variant="outline"
-          className=" w-[80px]  my-5"
-          onClick={handleGoBackButton}
-        >
-          Go Back
-        </Button>
->>>>>>> 887f81e (changes in da class)
+        <div className="bg-teal-600 px-[84px] pt-8 pb-[84px] flex flex-col gap-4 relative">
+          <Button
+            variant="outline"
+            className=" w-[80px]  my-5"
+            onClick={handleGoBackButton}
+          >
+            Go Back
+          </Button>
+        </div>
         <h2 className="text-3xl font-bold">{course.title}</h2>
         <p className="text-gray-700">{course.description}</p>
         {isInstructor && (
@@ -169,7 +164,6 @@ export const CourseDetail = () => {
           </>
         )}
       </div>
-
       <div className="flex flex-row justify-between gap-10 py-8 px-[84px]">
         <div className="w-full">
           <h3 className="text-2xl font-semibold mb-4">Course content</h3>
