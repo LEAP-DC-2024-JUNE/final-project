@@ -466,7 +466,7 @@ export default function CourseSection({
           ))}
         </Accordion>
       </div>
-      <Toaster position="top-right" />
+      {/* <Toaster position="top-right" /> */}
       {/* Go back to courses button */}
       <div className="flex justify-center mt-8 pt-4 border-t">
         <Button

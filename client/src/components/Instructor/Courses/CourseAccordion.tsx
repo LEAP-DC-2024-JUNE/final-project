@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/accordion";
 import DeleteButton from "@/components/Buttons/DeleteVideoButton";
 import CourseEditInput from "./CourseEditInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type CourseAccordionProps = {
   sections: Section[];
@@ -29,6 +29,10 @@ export const CourseAccordion = ({
 }: CourseAccordionProps) => {
   const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
   const [localSections, setLocalSections] = useState<Section[]>(sections);
+
+  useEffect(() => {
+    setLocalSections(sections);
+  }, [sections]);
 
   const handleEditClick = (videoId: string) => {
     setEditingVideoId((prev) => (prev === videoId ? null : videoId));
@@ -64,67 +68,81 @@ export const CourseAccordion = ({
             </div>
           </AccordionTrigger>
           <AccordionContent className="pl-4">
-            {section.videos.map((video, idx) => (
-              <div key={video.id} className="py-2 text-gray-700 text-sm">
-                {editingVideoId === video.id ? (
-                  <CourseEditInput
-                    videoId={video.id}
-                    initialTitle={video.title}
-                    initialUrl={video.url}
-                    onSave={handleSave}
-                    onDelete={() => {
-                      setEditingVideoId(null);
-                      onVideoDeleted?.(video.id, section.id);
-                    }}
-                  />
-                ) : (
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <span className="text-lg">
-                        {idx + 1}. {video.title}
-                      </span>
-                      {isInstructor ? (
-                        video.url && (
-                          <a
-                            href={video.url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-orange-600 hover:underline ml-4 text-xs"
-                          >
-                            Preview
-                          </a>
-                        )
-                      ) : (
-                        <span className="ml-4 text-xs text-gray-500 italic">
-                          Purchase this course to access the lesson
+            <>
+              {section.videos.length === 0 && (
+                <div className="py-2 text-sm text-gray-500">No videos yet</div>
+              )}
+
+              {section.videos.map((video, idx) => (
+                <div key={video.id} className="py-2 text-gray-700 text-sm">
+                  {editingVideoId === video.id ? (
+                    <CourseEditInput
+                      videoId={video.id}
+                      initialTitle={video.title}
+                      initialUrl={video.url}
+                      onSave={handleSave}
+                      onDelete={() => {
+                        setEditingVideoId(null);
+                        onVideoDeleted?.(video.id, section.id);
+                      }}
+                    />
+                  ) : (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <span className="text-lg">
+                          {idx + 1}. {video.title}
                         </span>
+                        {isInstructor ? (
+                          video.url && (
+                            <a
+                              href={video.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-orange-600 hover:underline ml-4 text-xs"
+                            >
+                              Preview
+                            </a>
+                          )
+                        ) : (
+                          <span className="ml-4 text-xs text-gray-500 italic">
+                            Purchase this course to access the lesson
+                          </span>
+                        )}
+                      </div>
+                      {isInstructor && (
+                        <div className="flex items-center gap-2">
+                          <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            <Edit2Icon
+                              size={24}
+                              onClick={() => handleEditClick(video.id)}
+                              className="cursor-pointer hover:bg-zinc-100 hover:text-zinc-600 rounded p-1 text-gray-500"
+                            />
+                          </motion.div>
+                          <DeleteButton
+                            videoId={video.id}
+                            videoTitle={video.title}
+                            onDeleteSuccess={() => {
+                              onVideoDeleted?.(video.id, section.id);
+                            }}
+                          />
+                        </div>
                       )}
                     </div>
-                    {isInstructor && (
-                      <div className="flex items-center gap-2">
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Edit2Icon
-                            size={24}
-                            onClick={() => handleEditClick(video.id)}
-                            className="cursor-pointer hover:bg-zinc-100 hover:text-zinc-600 rounded p-1 text-gray-500"
-                          />
-                        </motion.div>
-                        <DeleteButton
-                          videoId={video.id}
-                          videoTitle={video.title}
-                          onDeleteSuccess={() => {
-                            onVideoDeleted?.(video.id, section.id);
-                          }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              ))}
+
+              {isInstructor && (
+                <div className="py-2">
+                  <button className="text-sm text-blue-600 hover:underline">
+                    + Add Video
+                  </button>
+                </div>
+              )}
+            </>
           </AccordionContent>
         </AccordionItem>
       ))}
