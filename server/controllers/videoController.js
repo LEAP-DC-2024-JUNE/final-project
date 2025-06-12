@@ -32,6 +32,7 @@ export const createVideo = async (req, res) => {
   const { sectionId } = req.params;
   const { title, url } = req.body;
   const { id: userId } = req.user;
+  console.log("req.user:", req.user);
 
   if (!title || !url) {
     return res.status(400).json({ error: "Title and URL are required" });

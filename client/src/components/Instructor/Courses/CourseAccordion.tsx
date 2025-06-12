@@ -120,24 +120,19 @@ export const CourseAccordion = ({
       toast.dismiss();
       toast.success("Video uploaded successfully!");
 
-      onVideoAdded?.(sectionId, {
+      const savedVideo = await saveVideoToBackend(sectionId, {
         title: newVideo.title,
         url: data.secure_url,
       });
+
+      onVideoAdded?.(sectionId, savedVideo);
 
       setLocalSections((prevSections) =>
         prevSections.map((section) =>
           section.id.toString() === sectionId
             ? {
                 ...section,
-                videos: [
-                  ...section.videos,
-                  {
-                    id: `temp-${Date.now()}`,
-                    title: newVideo.title,
-                    url: data.secure_url,
-                  },
-                ],
+                videos: [...section.videos, savedVideo],
               }
             : section
         )
@@ -148,6 +143,36 @@ export const CourseAccordion = ({
       toast.dismiss();
       toast.error(error.message || "Upload failed");
     }
+  };
+
+  const saveVideoToBackend = async (
+    sectionId: string,
+    video: { title: string; url: string }
+  ) => {
+    const token = await getToken(); // from useAuth
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/videos/section/${sectionId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // if you protect your routes
+        },
+        body: JSON.stringify({
+          title: video.title,
+          url: video.url,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error || "Failed to save video");
+    }
+
+    const savedVideo = await response.json();
+    return savedVideo;
   };
 
   return (
