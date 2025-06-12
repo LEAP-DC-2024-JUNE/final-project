@@ -83,15 +83,18 @@ export function CreateCourseModal1({ isOpen, onClose, onCourseCreated }: any) {
   const handleGenerate = async (courseTitle: string) => {
     try {
       setIsGenerating(true);
-      const response = await fetch("http://localhost:3000/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          content: courseTitle,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/generate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            content: courseTitle,
+          }),
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to generate description");
 

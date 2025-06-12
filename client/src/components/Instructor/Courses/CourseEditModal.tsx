@@ -36,6 +36,7 @@ export const CourseEditModal = ({
     price: "",
     imageUrl: "",
   });
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     if (course) {
@@ -91,6 +92,38 @@ export const CourseEditModal = ({
     }
   };
 
+  const handleGenerate = async (courseTitle: string) => {
+    try {
+      setIsGenerating(true);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/generate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            content: courseTitle,
+          }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to generate description");
+
+      const data = await response.json();
+
+      setFormState((prev) => ({
+        ...prev,
+        description: data.generatedResponse,
+      }));
+    } catch (error: any) {
+      console.error("Error generating description:", error);
+      alert(error.message || "Something went wrong");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[600px] max-h-[80vh] overflow-y-auto">
@@ -109,6 +142,13 @@ export const CourseEditModal = ({
               disabled={isLoading}
             />
           </div>
+          <Button
+            onClick={() => handleGenerate(formState.title)}
+            className="bg-green-800"
+            disabled={isGenerating || isLoading}
+          >
+            {isGenerating ? "Generating..." : "Generate description with AI"}
+          </Button>
 
           <div className="grid gap-2">
             <Label>Course Description *</Label>
