@@ -38,18 +38,28 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <header className="flex justify-between items-center p-4 gap-4 h-16">
+          <header className="flex justify-between items-center px-6 py-4 gap-4 h-16 ">
             <Logo />
             <div className="flex gap-4 z-10">
               <SignedOut>
-                <SignInButton />
-                <SignUpButton />
+                <SignInButton>
+                  <button className=" font-semibold hover:text-gray-400">
+                    Sign In
+                  </button>
+                </SignInButton>
+
+                <SignUpButton>
+                  <button className=" font-semibold hover:text-gray-400">
+                    Sign Up
+                  </button>
+                </SignUpButton>
               </SignedOut>
               <SignedIn>
                 <UserButton />
               </SignedIn>
             </div>
           </header>
+
           {children}
           <Toaster />
         </body>
