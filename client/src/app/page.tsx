@@ -11,7 +11,7 @@ const Home = () => {
   return (
     <div className="flex flex-col justify-center items-center h-screen gap-5 p-4">
       <h1 className="text-4xl font-bold text-center">Welcome to SURAA!</h1>
-      <p className="text-lg mb-6">Choose your role to continue</p>
+      <p className="text-lg mb-6">Choose your role to Sign Up!</p>
 
       <div className="flex flex-col md:flex-row gap-6 w-full max-w-4xl">
         <motion.div

@@ -154,15 +154,17 @@ export const CourseDetail = () => {
   return (
     <div className="">
       <div className="bg-teal-500 px-[84px] pt-8 pb-[84px] flex flex-col gap-4 relative">
-        <button
-          className="border rounded-lg text-black bg-teal-100 p-2 w-[100px] cursor-pointer hover:bg-teal-200 text-sm"
-          onClick={handleGoBackButton}
-        >
-          ← Go Back
-        </button>
+        {isInstructor && (
+          <button
+            className="border rounded-lg text-black bg-teal-100 p-2 w-[100px] cursor-pointer hover:bg-teal-200 text-sm"
+            onClick={handleGoBackButton}
+          >
+            ← Go Back
+          </button>
+        )}
 
         <h2 className="text-3xl font-bold">{course.title}</h2>
-        <p className="text-gray-900 italic">{course.description}</p>
+        <p className="text-gray-800">{course.description}</p>
         {isInstructor && (
           <>
             <button
@@ -180,6 +182,7 @@ export const CourseDetail = () => {
           </>
         )}
       </div>
+
       <div className="flex flex-row justify-between gap-10 py-8 px-[84px]">
         <div className="w-full">
           <h3 className="text-2xl font-semibold mb-4">Course content</h3>
